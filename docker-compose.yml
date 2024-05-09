@@ -1,0 +1,25 @@
+version: '3.8'
+services:
+  wxBotWebhook:
+    image: dannicool/docker-wechatbot-webhook
+    volumes:
+      - ./logs:/app/log
+    ports:
+      - "3001:3001"
+    environment:
+      - LOG_LEVEL=info # 调整容器输出级别（不影响日志文件输出等级）运行时提示的消息等级（默认info，debug级别会输出详细的日志)
+      - DISABLE_AUTO_LOGIN=false # 如果不希望登录一次后就记住当前账号，想每次都扫码登陆，填 true
+      - LOGIN_API_TOKEN=${LOGIN_API_TOKEN:-123456}
+      # - ACCEPT_RECVD_MSG_MYSELF=true # 如果希望机器人可以自己接收消息，填 true
+      - RECVD_MSG_API=${RECVD_MSG_API:-http://wechat-apiserver/event} # 如果想自己处理收到消息的逻辑，在下面填上你的API地址, 默认为空
+      # - LOGIN_API_TOKEN= # 登录地址Token访问地址： http://localhost:3001/login?token=[LOCAL_LOGIN_API_TOKEN]
+    restart: unless-stopped
+
+  wechat-apiserver:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    image: wechat-apiserver:${IMAGE_TAG:-latest}
+    ports:
+      - "3002:8000"
+    restart: always
