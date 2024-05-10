@@ -62,7 +62,6 @@ class EventSource(BaseModel):
     @field_validator("to", mode="before")
     def validate_to(value):
         if "payload" in value:
-            print(value["payload"])
             return EventUser(**value["payload"])
         else:
             return None
