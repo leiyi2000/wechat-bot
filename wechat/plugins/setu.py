@@ -4,6 +4,7 @@ from wechat.schemas import (
     Event,
     Message,
     MessageType,
+    ReplyUserMessage,
     ReplyRoomMessage,
 )
 
@@ -13,11 +14,18 @@ router = CommandRouter()
 
 @router.command("牛马", event_arg=True)
 async def setu(event: Event):
-    print(event)
-    return ReplyRoomMessage(
-        to=event.source.room.payload.topic,
-        data=Message(
-            type=MessageType.file,
-            content='https://api.anosu.top/img?$alias=cloud.jpg',
-        )
+    message = Message(
+        type=MessageType.file,
+        content='https://api.anosu.top/img?$alias=cloud.jpg',
     )
+    if event.is_room:
+        reply = ReplyRoomMessage(
+            to=event.source.room.payload.topic,
+            data=message,
+        )
+    else:
+        reply = ReplyUserMessage(
+            to=event.source.from_user.name,
+            data=message
+        )
+    return reply
