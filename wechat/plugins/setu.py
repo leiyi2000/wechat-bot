@@ -13,6 +13,7 @@ router = CommandRouter()
 
 @router.command("牛马", event_arg=True)
 async def setu(event: Event):
+    print(event)
     return ReplyRoomMessage(
         to=event.source.room.payload.topic,
         data=Message(

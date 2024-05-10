@@ -33,19 +33,15 @@ class EventRoom(BaseModel):
 
 class EventSourceFromPayload(BaseModel):
 
-    address: str
     alias: str
     avatar: str
-    city: str
     friend: bool
     gender: int
     id: str
     name: str
     phone: List
     province: str
-    signature: str
     star: bool
-    weixin: str
     type: int
 
 
