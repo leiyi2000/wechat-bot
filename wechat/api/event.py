@@ -33,5 +33,5 @@ async def receive(
         "system_event": system_event,
         "msg_from_self": msg_from_self,
     }
-    log.info(f"receive event: {event}")
+    log.info(f"receive event: {json.dumps(event, ensure_ascii=False)}")
     background_tasks.add_task(task.event_task, Event.model_validate(event))

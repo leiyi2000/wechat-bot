@@ -14,7 +14,7 @@ log = structlog.get_logger()
 
 
 async def event_task(event: EventSchema):
-    routes = router.matches(event.content)
+    routes = router.matches(event)
     for route in routes:
         func = route.func
         # 判断是否需要传入事件对象
