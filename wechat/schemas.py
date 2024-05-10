@@ -37,9 +37,30 @@ class EventUser(BaseModel):
 
 class EventSource(BaseModel):
 
-    room: EventRoom
-    to: dict
-    from_user: EventSourceFrom = Field(alias="from")
+    room: EventRoom | None
+    to: EventUser | None
+    from_user: EventUser | None = Field(alias="from")
+
+    @field_validator("room", mode="before")
+    def validate_room(value):
+        if "payload" in value:
+            return EventRoom(**value["payload"])
+        else:
+            return None
+
+    @field_validator("to", mode="before")
+    def validate_to(value):
+        if "payload" in value:
+            return EventUser(**value["payload"])
+        else:
+            return None
+
+    @field_validator("from_user", mode="before")
+    def validate_from_user(value):
+        if "payload" in value:
+            return EventUser(**value["payload"])
+        else:
+            return None
 
 
 class Event(BaseModel):
