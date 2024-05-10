@@ -20,7 +20,7 @@ async def setu(event: Event):
     )
     if event.is_room:
         reply = ReplyRoomMessage(
-            to=event.source.room.payload.topic,
+            to=event.source.room.topic,
             data=message,
         )
     else:
