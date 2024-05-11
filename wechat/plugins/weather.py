@@ -11,8 +11,6 @@ from wechat.schemas import (
     Event,
     Message,
     MessageType,
-    ReplyUserMessage,
-    ReplyRoomMessage,
 )
 
 
@@ -50,15 +48,4 @@ async def amap_weather(city: str) -> Message:
 
 @router.command("查天气")
 async def real_time_weather(event: Event):
-    message = await amap_weather(event.content.removeprefix("查天气").strip())
-    if event.is_room:
-        reply = ReplyRoomMessage(
-            to=event.source.room.topic,
-            data=message,
-        )
-    else:
-        reply = ReplyUserMessage(
-            to=event.source.from_user.name,
-            data=message
-        )
-    return reply
+    return await amap_weather(event.content.removeprefix("查天气").strip())
