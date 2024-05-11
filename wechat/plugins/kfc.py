@@ -1,4 +1,3 @@
-
 import httpx
 
 from wechat.command import CommandRouter
