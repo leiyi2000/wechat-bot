@@ -4,11 +4,13 @@ from wechat.plugins import (
     weather,
     epic,
     kfc,
+    lol,
 )
 
 
 router = CommandRouter()
 # 指令注入
+router.include_router(lol.router)
 router.include_router(kfc.router)
 router.include_router(setu.router)
 router.include_router(epic.router)
