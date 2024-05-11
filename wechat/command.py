@@ -1,6 +1,17 @@
+import asyncio
+from functools import partial
 from typing import Callable, Any, List, Dict
 
 from wechat.schemas import Event
+
+import httpx
+import structlog
+
+from wechat.settings import WX_BOT_API
+from wechat.schemas import Event as EventSchema
+
+
+log = structlog.get_logger()
 
 
 class CommandRoute:
@@ -43,9 +54,19 @@ class CommandRouter:
         *,
         name: str = None,
         limit_room: bool = False,
-        event_arg: bool = False,
+        event_arg: bool = True,
         func_kwargs: Dict[str, Any] = {},
     ):
+        """command装饰器
+
+        Args:
+            prefix (str): 指令前缀.
+            func (Callable[..., Any]): 命令处理函数.
+            name (str, optional): 名称.
+            limit_room (bool, optional): True 限制只能处理群消息.
+            event_arg (bool, optional): True 传递event参数到func.
+            func_kwargs (Dict[str, Any], optional): func额外参数.
+        """
         def decorator(func: Callable[..., Any]):
             # 初始化一个命令路由
             route = CommandRoute(
@@ -66,3 +87,24 @@ class CommandRouter:
     def include_router(self, router: "CommandRouter"):
         for route in router.routes:
             self.add_route(route)
+
+
+async def run_command(router: CommandRouter, event: EventSchema):
+    """路由命令执行.
+
+    Args:
+        router (CommandRouter): 命令路由器.
+        event (EventSchema): 消息事件.
+    """
+    routes = router.matches(event)
+    for route in routes:
+        func = route.func
+        if route.event_arg:
+            func = partial(func, event)
+        if asyncio.iscoroutinefunction(func):
+            reply = await func(**route.func_kwargs)
+        else:
+            reply = func(**route.func_kwargs)
+        if reply:
+            async with httpx.AsyncClient() as client:
+                await client.post(WX_BOT_API, json=reply.model_dump(by_alias=True))

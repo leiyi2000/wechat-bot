@@ -4,8 +4,9 @@ import json
 import structlog
 from fastapi import APIRouter, Form, BackgroundTasks
 
-from wechat import task
 from wechat.schemas import Event
+from wechat.command import run_command
+from wechat.plugins import router as plugin_router
 
 
 router = APIRouter()
@@ -34,4 +35,4 @@ async def receive(
         "msg_from_self": msg_from_self,
     }
     log.info(f"receive event: {json.dumps(event, ensure_ascii=False)}")
-    background_tasks.add_task(task.event_task, Event.model_validate(event))
+    background_tasks.add_task(run_command, plugin_router, Event.model_validate(event))

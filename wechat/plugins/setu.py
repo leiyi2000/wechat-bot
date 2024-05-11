@@ -12,7 +12,7 @@ from wechat.schemas import (
 router = CommandRouter()
 
 
-@router.command("牛马", event_arg=True)
+@router.command("牛马")
 async def setu(event: Event):
     message = Message(
         type=MessageType.file,

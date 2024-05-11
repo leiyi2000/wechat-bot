@@ -29,7 +29,7 @@ def get_city_code(city: str) -> str | None:
             return code
 
 
-async def amap_weather(city: str) -> str:
+async def amap_weather(city: str) -> Message:
     if (city_code := get_city_code(city)) is None:
         content = '未找到该城市'
     else:
@@ -48,7 +48,7 @@ async def amap_weather(city: str) -> str:
     return Message(type=MessageType.text, content=content)
 
 
-@router.command("查天气", event_arg=True)
+@router.command("查天气")
 async def real_time_weather(event: Event):
     message = await amap_weather(event.content.removeprefix("查天气").strip())
     if event.is_room:
