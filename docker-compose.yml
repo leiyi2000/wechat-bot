@@ -23,7 +23,7 @@ services:
 
     environment:
       - WX_BOT_API=${WX_BOT_API:-http://wxBotWebhook:3001/webhook/msg/v2?token=123456}
-      - WEATHER_API_KEY=${WEATHER_API_KEY:-ed5cece5e0f95bf605dcf7b7ae4592f8}
+      - WEATHER_API_KEY=${WEATHER_API_KEY:-}
     ports:
       - "3002:8000"
     restart: always
