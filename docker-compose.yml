@@ -11,7 +11,7 @@ services:
       - DISABLE_AUTO_LOGIN=false # 如果不希望登录一次后就记住当前账号，想每次都扫码登陆，填 true
       - LOGIN_API_TOKEN=${LOGIN_API_TOKEN:-123456}
       # - ACCEPT_RECVD_MSG_MYSELF=true # 如果希望机器人可以自己接收消息，填 true
-      - RECVD_MSG_API=${RECVD_MSG_API:-http://wechat-apiserver/event} # 如果想自己处理收到消息的逻辑，在下面填上你的API地址, 默认为空
+      - RECVD_MSG_API=${RECVD_MSG_API:-http://wechat-apiserver:8000/event} # 如果想自己处理收到消息的逻辑，在下面填上你的API地址, 默认为空
       # - LOGIN_API_TOKEN= # 登录地址Token访问地址： http://localhost:3001/login?token=[LOCAL_LOGIN_API_TOKEN]
     restart: unless-stopped
 
@@ -24,6 +24,7 @@ services:
     environment:
       - WX_BOT_API=${WX_BOT_API:-http://wxBotWebhook:3001/webhook/msg/v2?token=123456}
       - WEATHER_API_KEY=${WEATHER_API_KEY:-}
+      - LOL_WEGAME_COOKIE=${WEATHER_API_KEY:-}
     ports:
       - "3002:8000"
     restart: always
