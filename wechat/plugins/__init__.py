@@ -5,6 +5,7 @@ from wechat.plugins import (
     epic,
     kfc,
     lol,
+    biliheat,
 )
 
 
@@ -15,3 +16,4 @@ router.include_router(kfc.router)
 router.include_router(setu.router)
 router.include_router(epic.router)
 router.include_router(weather.router)
+router.include_router(biliheat.router)
