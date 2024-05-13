@@ -7,7 +7,6 @@ log = structlog.get_logger()
 
 
 class ConfigKey:
-
     kfc_api = "kfc_api"
     setu_api = "setu_api"
     error_reply = "error_reply"

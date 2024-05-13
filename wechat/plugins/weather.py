@@ -37,7 +37,9 @@ async def real_time_weather(event: Event):
         response = await client.get(url, params=params)
         response.raise_for_status()
     # 读取模板内容
-    with open(os.path.join(TEMPLATE_DIR, "weather.html.jinja2"), encoding="utf-8") as file:
+    with open(
+        os.path.join(TEMPLATE_DIR, "weather.html.jinja2"), encoding="utf-8"
+    ) as file:
         template = jinja2.Template(file.read())
     assert len(response.json()["lives"]) > 0
     html = template.render(weather=response.json())

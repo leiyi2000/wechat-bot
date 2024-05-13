@@ -98,7 +98,7 @@ class CommandRouter:
 
 
 async def reply(
-    event: EventSchema, 
+    event: EventSchema,
     reply_message: List[Message] | Message | FileMessage | str | None,
 ):
     """回复消息.
@@ -117,9 +117,9 @@ async def reply(
         to = event.source.from_user.name
     if isinstance(reply_message, FileMessage):
         reply = {
-            'to': (None, to),
-            'content': (reply_message.filename, reply_message.content),
-            'isRoom': (None, is_room),
+            "to": (None, to),
+            "content": (reply_message.filename, reply_message.content),
+            "isRoom": (None, is_room),
         }
         async with httpx.AsyncClient() as client:
             response = await client.post(WX_BOT_API_V1, files=reply)
@@ -151,8 +151,9 @@ async def run_command(router: CommandRouter, event: EventSchema):
             else:
                 reply_message = func(**route.func_kwargs)
             await reply(event, reply_message)
-        except Exception as e:
+        except Exception:
             import traceback
+
             log.error(traceback.format_exc())
             reply_message = await config.error_reply()
             await reply(event, reply_message)

@@ -26,7 +26,7 @@ async def html_to_image(
         chromium = playwright.chromium
         browser = await chromium.launch()
         page = await browser.new_page()
-        await page.set_content(html, wait_until='networkidle')
+        await page.set_content(html, wait_until="networkidle")
         if dom:
             page = page.locator(dom)
         return await page.screenshot(path=path, type=type, quality=quality)
