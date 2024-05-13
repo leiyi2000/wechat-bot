@@ -29,15 +29,14 @@ async def get_headers() -> dict:
 async def player_search(event: Event):
     headers = await get_headers()
     nickname = event.content.removeprefix("lol搜索").strip()
+    url = "https://www.wegame.com.cn/api/v1/wegame.pallas.game.LolBattle/SearchPlayer"
     async with httpx.AsyncClient() as client:
-        url = (
-            "https://www.wegame.com.cn/api/v1/wegame.pallas.game.LolBattle/SearchPlayer"
-        )
         payload = {
             "nickname": nickname,
             "from_src": "lol_helper",
         }
         response = await client.post(url, json=payload, headers=headers)
+        response.raise_for_status()
     return json.dumps(response.json(), indent=4, ensure_ascii=False)
 
 
@@ -57,6 +56,7 @@ async def battle(event: Event):
             "from_src": "lol_helper",
         }
         response = await client.post(url, json=payload, headers=headers)
+        response.raise_for_status()
     return json.dumps(response.json(), indent=4, ensure_ascii=False)
 
 
@@ -74,4 +74,5 @@ async def battle_detail(event: Event):
             "from_src": "lol_helper",
         }
         response = await client.post(url, json=payload, headers=headers)
+        response.raise_for_status()
     return json.dumps(response.json(), indent=4, ensure_ascii=False)

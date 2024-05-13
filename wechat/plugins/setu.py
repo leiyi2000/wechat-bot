@@ -1,4 +1,6 @@
-"""牛马指令"""
+"""ST指令"""
+
+from wechat import config
 from wechat.command import CommandRouter
 from wechat.schemas import (
     Message,
@@ -7,9 +9,9 @@ from wechat.schemas import (
 
 
 router = CommandRouter()
-anosu = 'https://api.anosu.top/img?$alias=cloud.jpg'
 
 
-@router.command("牛马", event_arg=False)
+@router.command("st", event_arg=False)
 async def setu():
-    return Message(type=MessageType.file, content=anosu)
+    api = await config.setu_api()
+    return Message(type=MessageType.file, content=api)

@@ -46,10 +46,8 @@ async def amap_weather(city: str) -> Message:
             response = await client.get(
                 "https://restapi.amap.com/v3/weather/weatherInfo", params=params
             )
-        if response.is_success:
-            content = json.dumps(response.json(), indent=4, ensure_ascii=False)
-        else:
-            content = f"{city} 天气查询失败"
+            response.raise_for_status()
+        content = json.dumps(response.json(), indent=4, ensure_ascii=False)
     return Message(type=MessageType.text, content=content)
 
 

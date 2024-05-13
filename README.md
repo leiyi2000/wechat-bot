@@ -4,9 +4,9 @@
 #### 微信机器人
 
 ### 指令
-- 牛马 
+- st 
     - 随机色图\
-    ![image](!https://api.anosu.top/img)
+    ![色图](!https://img.loliapi.cn/i/pc/img530.webp)
 - 查天气
     - 查询天气如: 查天气 成都
     ```json
