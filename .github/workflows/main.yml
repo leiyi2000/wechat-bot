@@ -26,14 +26,14 @@ jobs:
     - name: Install Rsync
       run: sudo apt-get install -y rsync
 
-    - name: Setup SSH
-      run: mkdir -p ~/.ssh && touch ~/.ssh/known_hosts && touch ~/.ssh/id_rsa.pub
+    - name: Setup SSH 1
+      run: mkdir -p ~/.ssh
 
-    - name: Setup knownhosts
+    - name: Setup SSH 2
       run: ssh-keyscan ${{ secrets.SERVER_HOST }} >> ~/.ssh/known_hosts
 
-    - name: Set up SSH
-      run: ${{ secrets.SSH_PUB_KEY }} >> ~/.ssh/id_rsa.pub
+    - name: Setup SSH 3
+      run: '${{ secrets.SSH_PUB_KEY }}' >> ~/.ssh/id_rsa.pub
 
     - name: Sync files
       run: |
