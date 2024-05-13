@@ -35,7 +35,7 @@ jobs:
 
     - name: Sync files
       run: |
-        rsync -av --delete code/ root@${{ secrets.SERVER_HOST }}:/root/apps/wechat
+        rsync -av --delete --exclude='.*' code/ root@${{ secrets.SERVER_HOST }}:/root/apps/wechat
 
     - name: Run
       run: ssh root@${{ secrets.SERVER_HOST }} "export IMAGE_TAG=${GITHUB_SHA::4}_$(date +'%Y%m%d') && cd /root/apps/wechat && docker compose up -d"
