@@ -33,7 +33,7 @@ jobs:
       run: ssh-keyscan ${{ secrets.SERVER_HOST }} >> ~/.ssh/known_hosts
 
     - name: Setup SSH 3
-      run: '${{ secrets.SSH_PUB_KEY }}' >> ~/.ssh/id_rsa.pub
+      run: cat ${{ secrets.SSH_PUB_KEY }} >> ~/.ssh/id_rsa.pub
 
     - name: Sync files
       run: |
