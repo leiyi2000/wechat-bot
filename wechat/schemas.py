@@ -6,7 +6,6 @@ from pydantic import BaseModel, Field, field_validator
 
 
 class EventRoomMember(BaseModel):
-
     avatar: str
     id: str
     name: str
@@ -14,7 +13,6 @@ class EventRoomMember(BaseModel):
 
 
 class EventRoom(BaseModel):
-
     id: str
     adminIdList: List
     avatar: str
@@ -24,7 +22,6 @@ class EventRoom(BaseModel):
 
 
 class EventUser(BaseModel):
-
     id: str
     alias: str
     avatar: str
@@ -36,7 +33,6 @@ class EventUser(BaseModel):
 
 
 class EventSource(BaseModel):
-
     room: EventRoom | None
     to: EventUser | None
     from_user: EventUser | None = Field(alias="from")
@@ -64,7 +60,6 @@ class EventSource(BaseModel):
 
 
 class Event(BaseModel):
-
     type: str
     content: str
     source: EventSource
@@ -93,13 +88,12 @@ class Message(BaseModel):
 
 class ReplyRoomMessage(BaseModel):
     """回复消息"""
-    
+
     to: str
     is_room: bool = Field(default=True, alias="isRoom")
     data: List[Message] | Message
 
 
 class ReplyUserMessage(BaseModel):
-        
     to: str
     data: List[Message] | Message
