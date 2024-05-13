@@ -9,7 +9,6 @@ jobs:
     runs-on: ubuntu-latest
     
     steps:
-
     - name: Get the current branch SHA
       id: branch_sha # 后面的步骤可以用${{ steps.branch_sha.outputs.hash }}来引用这个值
       run: echo "::set-output name=hash::$(git rev-parse --short HEAD)"
