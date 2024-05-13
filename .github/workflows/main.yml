@@ -35,6 +35,9 @@ jobs:
     - name: Setup SSH 3
       run: echo ${{ secrets.SSH_PUB_KEY }} >> ~/.ssh/id_rsa.pub
 
+    - name: Setup SSH 4
+      run: ssh root@${{ secrets.SERVER_HOST }} echo "Hello World"
+
     - name: Sync files
       run: |
         rsync -av --delete code/ root@${{ secrets.SERVER_HOST }}:/root/apps/wechat
