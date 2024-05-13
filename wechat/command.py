@@ -116,13 +116,15 @@ async def reply(
         is_room = "0"
         to = event.source.from_user.name
     if isinstance(reply_message, FileMessage):
-        reply = {
-            "to": (None, to),
+        files = {
             "content": (reply_message.filename, reply_message.content),
-            "isRoom": (None, is_room),
+        }
+        data = {
+            "to": to,
+            "isRoom": is_room,
         }
         async with httpx.AsyncClient() as client:
-            response = await client.post(WX_BOT_API_V1, files=reply)
+            response = await client.post(WX_BOT_API_V1, data=data, files=files)
     else:
         if isinstance(reply_message, str):
             reply_message = Message(type=MessageType.text, content=reply_message)

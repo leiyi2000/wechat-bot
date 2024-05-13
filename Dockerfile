@@ -16,6 +16,9 @@ WORKDIR /app
 
 # 拷贝requirements.txt
 COPY --from=requirements-stage /tmp/requirements.txt /app/requirements.txt
+# 设置为中国国内源
+RUN sed -i 's/archive.ubuntu.com/mirrors.aliyun.com/g' /etc/apt/sources.list
+RUN sed -i 's/security.ubuntu.com/mirrors.aliyun.com/g' /etc/apt/sources.list
 # 安装依赖
 RUN pip config set global.index-url https://pypi.tuna.tsinghua.edu.cn/simple
 RUN pip install --no-cache-dir -r /app/requirements.txt
