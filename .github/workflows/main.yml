@@ -36,7 +36,7 @@ jobs:
       run: echo ${{ secrets.SSH_PUB_KEY }} >> ~/.ssh/id_rsa.pub
 
     - name: Setup SSH 4
-      run: echo ${{ secrets.SSH_PRIVATE_KEY }} >> ~/.ssh/id_rsa
+      run: echo '${{ secrets.SSH_PRIVATE_KEY }}' >> ~/.ssh/id_rsa
 
     - name: Setup SSH 5
       run: ssh root@${{ secrets.SERVER_HOST }} echo "Hello World"
