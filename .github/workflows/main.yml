@@ -39,6 +39,9 @@ jobs:
       run: echo '${{ secrets.SSH_PRIVATE_KEY }}' >> ~/.ssh/id_rsa
 
     - name: Setup SSH 5
+      run: chmod 600 ~/.ssh/id_rsa && chmod 644 ~/.ssh/id_rsa.pub
+
+    - name: Setup SSH 6
       run: ssh root@${{ secrets.SERVER_HOST }} echo "Hello World"
 
     - name: Sync files
