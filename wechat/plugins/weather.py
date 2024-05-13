@@ -5,8 +5,8 @@ import json
 
 import httpx
 
+from wechat import config
 from wechat.command import CommandRouter
-from wechat.settings import WEATHER_API_KEY
 from wechat.schemas import (
     Event,
     Message,
@@ -29,10 +29,10 @@ def get_city_code(city: str) -> str | None:
 
 async def amap_weather(city: str) -> Message:
     if (city_code := get_city_code(city)) is None:
-        content = '未找到该城市'
+        content = '啊哦, 没有找到该城市'
     else:
         params = {
-            "key": WEATHER_API_KEY,
+            "key": await config.weather_api_key(),
             "city": city_code,
             "extensions": "base",
             "output": "JSON",

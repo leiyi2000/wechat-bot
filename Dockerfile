@@ -12,14 +12,15 @@ RUN pdm export -f requirements --output requirements.txt --without-hashes
 
 FROM python:3.11-slim-bullseye
 
-WORKDIR /code
+WORKDIR /app
 
 # 拷贝requirements.txt
-COPY --from=requirements-stage /tmp/requirements.txt /code/requirements.txt
+COPY --from=requirements-stage /tmp/requirements.txt /app/requirements.txt
 # 安装依赖
 RUN pip config set global.index-url https://pypi.tuna.tsinghua.edu.cn/simple
-RUN pip install --no-cache-dir -r /code/requirements.txt
+RUN pip install --no-cache-dir -r /app/requirements.txt
 
-COPY ./wechat /code/wechat
+COPY ./wechat /app/wechat
+COPY ./migrations /app/migrations
 
 CMD ["uvicorn", "wechat.main:app", "--host", "0.0.0.0", "--port", "8000"]

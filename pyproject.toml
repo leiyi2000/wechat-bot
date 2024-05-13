@@ -11,6 +11,8 @@ dependencies = [
     "uvicorn[standard]>=0.29.0",
     "structlog>=24.1.0",
     "httpx>=0.27.0",
+    "tortoise-orm>=0.20.1",
+    "aerich>=0.7.2",
 ]
 requires-python = "==3.11.*"
 readme = "README.md"
@@ -109,3 +111,8 @@ docstring-code-line-length = "dynamic"
 # 开发环境
 dev.env_file.override = ".env"
 dev.cmd = "uvicorn wechat.main:app --host 0.0.0.0 --port 8000 --reload"
+
+[tool.aerich]
+tortoise_orm = "wechat.settings.TORTOISE_ORM"
+location = "./migrations"
+src_folder = "./."

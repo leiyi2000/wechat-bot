@@ -6,7 +6,8 @@ from functools import partial
 import httpx
 import structlog
 
-from wechat.settings import ERROR_REPLY, WX_BOT_API
+from wechat import config
+from wechat.settings import WX_BOT_API
 from wechat.schemas import (
     Message,
     MessageType,
@@ -138,5 +139,5 @@ async def run_command(router: CommandRouter, event: EventSchema):
                 reply_message = func(**route.func_kwargs)
         except Exception as e:
             log.error(e)
-            reply_message = ERROR_REPLY
+            reply_message = await config.error_reply()
         await reply(event, reply_message)

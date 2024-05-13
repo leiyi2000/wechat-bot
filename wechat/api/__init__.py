@@ -1,7 +1,7 @@
 """路由配置"""
 from fastapi import APIRouter
 
-from wechat.api import event
+from wechat.api import event, config
 
 
 router = APIRouter()
@@ -16,4 +16,11 @@ router.include_router(
     event.router,
     prefix="/event",
     tags=["事件上报"],
+)
+
+
+router.include_router(
+    config.router,
+    prefix="/config",
+    tags=["配置"],
 )
