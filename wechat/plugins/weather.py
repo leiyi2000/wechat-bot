@@ -16,7 +16,12 @@ from wechat.schemas import (
 
 router = CommandRouter()
 # 加载高德地图城市编码
-with open(os.path.join(os.path.dirname(os.path.realpath(__file__)), './data/weather_amap_city.json'), 'r') as file:
+with open(
+    os.path.join(
+        os.path.dirname(os.path.realpath(__file__)), "./data/weather_amap_city.json"
+    ),
+    "r",
+) as file:
     #  [["圣方济各堂区", "820008"]]
     city_code: List[List[str]] = json.load(file)
 
@@ -29,7 +34,7 @@ def get_city_code(city: str) -> str | None:
 
 async def amap_weather(city: str) -> Message:
     if (city_code := get_city_code(city)) is None:
-        content = '啊哦, 没有找到该城市'
+        content = "啊哦, 没有找到该城市"
     else:
         params = {
             "key": await config.weather_api_key(),
@@ -38,11 +43,13 @@ async def amap_weather(city: str) -> Message:
             "output": "JSON",
         }
         async with httpx.AsyncClient() as client:
-            response = await client.get('https://restapi.amap.com/v3/weather/weatherInfo', params=params)
+            response = await client.get(
+                "https://restapi.amap.com/v3/weather/weatherInfo", params=params
+            )
         if response.is_success:
             content = json.dumps(response.json(), indent=4, ensure_ascii=False)
         else:
-            content = f'{city} 天气查询失败'
+            content = f"{city} 天气查询失败"
     return Message(type=MessageType.text, content=content)
 
 

@@ -9,16 +9,15 @@ log = structlog.get_logger()
 
 
 class ConfigKey(StrEnum):
-
-    lol_wegame_cookie = 'lol_wegame_cookie' 
-    error_reply = 'error_reply'
-    weather_api_key = 'weather_api_key'
+    lol_wegame_cookie = "lol_wegame_cookie"
+    error_reply = "error_reply"
+    weather_api_key = "weather_api_key"
 
 
 async def lol_wegame_cookie() -> str:
     config = await ConfigModel.get_or_none(key=ConfigKey.lol_wegame_cookie)
     if config is None:
-        log.warning('lol_wegame_cookie is not set')
+        log.warning("lol_wegame_cookie is not set")
         return ""
     else:
         return config.value
@@ -35,7 +34,7 @@ async def error_reply() -> str:
 async def weather_api_key() -> str:
     config = await ConfigModel.get_or_none(key=ConfigKey.weather_api_key)
     if config is None:
-        log.warning('weather_api_key is not set')
+        log.warning("weather_api_key is not set")
         return ""
     else:
         return config.value

@@ -1,4 +1,5 @@
 """服务入口"""
+
 from contextlib import asynccontextmanager
 
 from aerich import Command
@@ -11,7 +12,9 @@ from wechat.settings import APP_NAME, TORTOISE_ORM
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
-    command = Command(tortoise_config=TORTOISE_ORM, app=APP_NAME, location="./migrations")
+    command = Command(
+        tortoise_config=TORTOISE_ORM, app=APP_NAME, location="./migrations"
+    )
     await command.init()
     await command.upgrade(run_in_transaction=True)
     register_tortoise(

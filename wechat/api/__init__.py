@@ -1,4 +1,5 @@
 """路由配置"""
+
 from fastapi import APIRouter
 
 from wechat.api import event, config

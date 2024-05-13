@@ -73,6 +73,7 @@ class CommandRouter:
             event_arg (bool, optional): True 传递event参数到func.
             func_kwargs (Dict[str, Any], optional): func额外参数.
         """
+
         def decorator(func: Callable[..., Any]):
             # 初始化一个命令路由
             route = CommandRoute(
@@ -85,6 +86,7 @@ class CommandRouter:
             )
             self.add_route(route)
             return func
+
         return decorator
 
     def matches(self, event: EventSchema) -> List[CommandRoute]:
@@ -95,7 +97,9 @@ class CommandRouter:
             self.add_route(route)
 
 
-async def reply(event: EventSchema, reply_message: List[Message] | Message | str | None):
+async def reply(
+    event: EventSchema, reply_message: List[Message] | Message | str | None
+):
     """回复消息.
 
     Args:
