@@ -4,19 +4,19 @@ on:
   push:
     branches: [ "master" ]
 
-- name: Get the current branch SHA
-  id: branch_sha # 后面的步骤可以用${{ steps.branch_sha.outputs.hash }}来引用这个值
-  run: echo "::set-output name=hash::$(git rev-parse --short HEAD)"
-
-- name: Get the current date
-  id: date # 后面的步骤可以用${{ steps.date.outputs.date }}来引用这个值
-  run: echo "::set-output name=date::$(date +'%Y%m%d')"
-
 jobs:
   build:
     runs-on: ubuntu-latest
     
     steps:
+
+    - name: Get the current branch SHA
+    id: branch_sha # 后面的步骤可以用${{ steps.branch_sha.outputs.hash }}来引用这个值
+    run: echo "::set-output name=hash::$(git rev-parse --short HEAD)"
+
+  - name: Get the current date
+    id: date # 后面的步骤可以用${{ steps.date.outputs.date }}来引用这个值
+    run: echo "::set-output name=date::$(date +'%Y%m%d')"
   
     - name: Checkout Code
       uses: actions/checkout@v2
