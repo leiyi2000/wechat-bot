@@ -7,7 +7,6 @@ log = structlog.get_logger()
 
 
 class ConfigKey:
-
     error_reply = "error_reply"
     weather_api_key = "weather_api_key"
     lol_wegame_cookie = "lol_wegame_cookie"
