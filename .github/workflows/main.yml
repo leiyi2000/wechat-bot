@@ -10,10 +10,6 @@ jobs:
     runs-on: ubuntu-latest
     
     steps:
-    - name: Get the current date
-      id: date # 后面的步骤可以用${{ steps.date.outputs.date }}来引用这个值
-      run: echo "{date}={$(date +'%Y%m%d')}" >> $GITHUB_DATE
-    
     - name: Checkout Code
       uses: actions/checkout@v2
       with:
@@ -42,4 +38,4 @@ jobs:
         rsync -av --delete code/ root@${{ secrets.SERVER_HOST }}:/root/apps/wechat
 
     - name: Run
-      run: ssh root@${{ secrets.SERVER_HOST }} "export IMAGE_TAG=${GITHUB_SHA::4}${{ GITHUB_DATE }} && cd /root/apps/wechat && docker compose up -d"
+      run: ssh root@${{ secrets.SERVER_HOST }} "export IMAGE_TAG=${GITHUB_SHA::4}_$(date +'%Y%m%d') && cd /root/apps/wechat && docker compose up -d"
