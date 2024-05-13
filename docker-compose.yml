@@ -4,8 +4,6 @@ services:
     image: dannicool/docker-wechatbot-webhook
     volumes:
       - ./logs:/app/log
-    ports:
-      - "3001:3001"
     environment:
       - LOG_LEVEL=info
       - DISABLE_AUTO_LOGIN=false

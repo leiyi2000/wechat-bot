@@ -86,14 +86,16 @@ class Message(BaseModel):
     content: str
 
 
-class ReplyRoomMessage(BaseModel):
-    """回复消息"""
+class FileMessage(BaseModel):
+    """文件消息"""
+
+    filename: str
+    content: bytes
+
+
+class ReplyMessage(BaseModel):
+    """回复群消息"""
 
     to: str
     is_room: bool = Field(default=True, alias="isRoom")
-    data: List[Message] | Message
-
-
-class ReplyUserMessage(BaseModel):
-    to: str
     data: List[Message] | Message

@@ -7,12 +7,12 @@ import httpx
 import structlog
 
 from wechat import config
-from wechat.settings import WX_BOT_API
+from wechat.settings import WX_BOT_API, WX_BOT_API_V1
 from wechat.schemas import (
     Message,
+    FileMessage,
     MessageType,
-    ReplyUserMessage,
-    ReplyRoomMessage,
+    ReplyMessage,
     Event as EventSchema,
 )
 
@@ -98,30 +98,39 @@ class CommandRouter:
 
 
 async def reply(
-    event: EventSchema, reply_message: List[Message] | Message | str | None
+    event: EventSchema, 
+    reply_message: List[Message] | Message | FileMessage | str | None,
 ):
     """回复消息.
 
     Args:
         event (EventSchema): 消息事件.
-        reply_message (Message | str): 回复内容.
+        reply_message (List[Message] | Message | FileMessage | str | None): 回复内容.
     """
     if reply_message is None or not reply_message:
         return
-    if isinstance(reply_message, str):
-        reply_message = Message(type=MessageType.text, content=reply_message)
     if event.is_room:
-        reply = ReplyRoomMessage(
-            to=event.source.room.topic,
-            data=reply_message,
-        )
+        is_room = "1"
+        to = event.source.room.topic
     else:
-        reply = ReplyUserMessage(
-            to=event.source.from_user.name,
-            data=reply_message,
-        )
-    async with httpx.AsyncClient() as client:
-        await client.post(WX_BOT_API, json=reply.model_dump(by_alias=True))
+        is_room = "0"
+        to = event.source.from_user.name
+    if isinstance(reply_message, FileMessage):
+        reply = {
+            'to': (None, to),
+            'content': (reply_message.filename, reply_message.content),
+            'isRoom': (None, is_room),
+        }
+        async with httpx.AsyncClient() as client:
+            response = await client.post(WX_BOT_API_V1, files=reply)
+    else:
+        if isinstance(reply_message, str):
+            reply_message = Message(type=MessageType.text, content=reply_message)
+        reply = ReplyMessage(to=to, data=reply_message).model_dump(by_alias=True)
+        async with httpx.AsyncClient() as client:
+            response = await client.post(WX_BOT_API, json=reply)
+    response.raise_for_status()
+    assert response.json()["success"], response.text
 
 
 async def run_command(router: CommandRouter, event: EventSchema):
@@ -141,7 +150,9 @@ async def run_command(router: CommandRouter, event: EventSchema):
                 reply_message = await func(**route.func_kwargs)
             else:
                 reply_message = func(**route.func_kwargs)
+            await reply(event, reply_message)
         except Exception as e:
-            log.error(e)
+            import traceback
+            log.error(traceback.format_exc())
             reply_message = await config.error_reply()
-        await reply(event, reply_message)
+            await reply(event, reply_message)

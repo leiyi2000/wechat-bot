@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+        }
+        .weather-container {
+            max-width: 250px;
+            max-height: 250px;
+            border: 1px solid #ccc;
+            padding: 20px;
+            border-radius: 5px;
+            text-align: center;
+            background-color: rgba(255, 255, 255, 0.85);
+        }
+        .city-name {
+            font-size: 24px;
+            font-weight: bold;
+        }
+        .weather-details {
+            margin-top: 20px;
+        }
+        .weather-details div {
+            margin-bottom: 10px;
+        }
+    </style>
+</head>
+<body id="weatherBackground">
+    <div id="main" class="weather-container">
+        <div id="cityName" class="city-name"></div>
+        <div id="weather"></div>
+        <div id="temperature"></div>
+        <div id="windDirection"></div>
+        <div id="windPower"></div>
+        <div id="humidity"></div>
+        <div id="reportTime"></div>
+    </div>
+
+    <script>
+        // var weatherData = {
+        //     "status": "1",
+        //     "count": "1",
+        //     "info": "OK",
+        //     "infocode": "10000",
+        //     "lives": [
+        //         {
+        //             "province": "四川",
+        //             "city": "成都市",
+        //             "adcode": "510100",
+        //             "weather": "晴",
+        //             "temperature": "30",
+        //             "winddirection": "南",
+        //             "windpower": "≤3",
+        //             "humidity": "30",
+        //             "reporttime": "2024-05-13 16:32:46",
+        //             "temperature_float": "30.0",
+        //             "humidity_float": "30.0"
+        //         }
+        //     ]
+        // };
+        var weatherData = {{ weather }}
+        document.getElementById('cityName').innerText = weatherData.lives[0].city;
+        document.getElementById('weather').innerText = '天气：' + weatherData.lives[0].weather;
+        document.getElementById('temperature').innerText = '温度：' + weatherData.lives[0].temperature + '°C';
+        document.getElementById('windDirection').innerText = '风向：' + weatherData.lives[0].winddirection;
+        document.getElementById('windPower').innerText = '风力：' + weatherData.lives[0].windpower + '级';
+        document.getElementById('humidity').innerText = '湿度：' + weatherData.lives[0].humidity + '%';
+        document.getElementById('reportTime').innerText = '报告时间：' + weatherData.lives[0].reporttime;
+
+        var weatherType = weatherData.lives[0].weather;
+        var body = document.getElementById('weatherBackground');
+    </script>
+</body>
+</html>

@@ -5,7 +5,7 @@
 groups = ["default"]
 strategy = ["cross_platform", "inherit_metadata"]
 lock_version = "4.4.1"
-content_hash = "sha256:b0c509148fb1ae21772d7cc590bd5dc91c7883673e77b198bc6409340e13a10d"
+content_hash = "sha256:e7f89d4a81835e5fee01b744e58ad0b0da5908746aa71aa27f4cc52461211a9a"
 
 [[package]]
 name = "aerich"

@@ -19,6 +19,7 @@ COPY --from=requirements-stage /tmp/requirements.txt /app/requirements.txt
 # 安装依赖
 RUN pip config set global.index-url https://pypi.tuna.tsinghua.edu.cn/simple
 RUN pip install --no-cache-dir -r /app/requirements.txt
+RUN playwright install --with-deps chromium
 
 COPY ./wechat /app/wechat
 COPY ./migrations /app/migrations

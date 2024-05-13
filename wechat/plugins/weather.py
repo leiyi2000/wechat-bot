@@ -1,56 +1,45 @@
-from typing import List
-
 import os
-import json
 
 import httpx
+import jinja2
 
+from wechat import render
 from wechat import config
 from wechat.command import CommandRouter
-from wechat.schemas import (
-    Event,
-    Message,
-    MessageType,
-)
+from wechat.settings import TEMPLATE_DIR
+from wechat.schemas import Event, FileMessage
 
 
 router = CommandRouter()
-# 加载高德地图城市编码
-with open(
-    os.path.join(
-        os.path.dirname(os.path.realpath(__file__)), "./data/weather_amap_city.json"
-    ),
-    "r",
-) as file:
-    #  [["圣方济各堂区", "820008"]]
-    city_code: List[List[str]] = json.load(file)
-
-
-def get_city_code(city: str) -> str | None:
-    for name, code in city_code:
-        if city == name or name.startswith(city):
-            return code
-
-
-async def amap_weather(city: str) -> Message:
-    if (city_code := get_city_code(city)) is None:
-        content = "啊哦, 没有找到该城市"
-    else:
-        params = {
-            "key": await config.weather_api_key(),
-            "city": city_code,
-            "extensions": "base",
-            "output": "JSON",
-        }
-        async with httpx.AsyncClient() as client:
-            response = await client.get(
-                "https://restapi.amap.com/v3/weather/weatherInfo", params=params
-            )
-            response.raise_for_status()
-        content = json.dumps(response.json(), indent=4, ensure_ascii=False)
-    return Message(type=MessageType.text, content=content)
 
 
 @router.command("查天气")
 async def real_time_weather(event: Event):
-    return await amap_weather(event.content.removeprefix("查天气").strip())
+    address = event.content.removeprefix("查天气").strip()
+    api_key = await config.weather_api_key()
+    url = "https://restapi.amap.com/v3/geocode/geo"
+    params = {
+        "key": api_key,
+        "address": address,
+    }
+    async with httpx.AsyncClient() as client:
+        response = await client.get(url, params=params)
+        response.raise_for_status()
+        city_code = response.json()["geocodes"][0]["adcode"]
+    params = {
+        "key": api_key,
+        "city": city_code,
+        "extensions": "base",
+        "output": "JSON",
+    }
+    url = "https://restapi.amap.com/v3/weather/weatherInfo"
+    async with httpx.AsyncClient() as client:
+        response = await client.get(url, params=params)
+        response.raise_for_status()
+    # 读取模板内容
+    with open(os.path.join(TEMPLATE_DIR, "weather.html.jinja2"), encoding="utf-8") as file:
+        template = jinja2.Template(file.read())
+    assert len(response.json()["lives"]) > 0
+    html = template.render(weather=response.json())
+    image = await render.html_to_image(html, dom="#main")
+    return FileMessage(filename="weather.png", content=image)
