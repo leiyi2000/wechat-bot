@@ -27,7 +27,7 @@ jobs:
       run: sudo apt-get install -y rsync
 
     - name: Setup SSH
-      run: mkdir -p ~/.ssh
+      run: mkdir -p ~/.ssh && touch ~/.ssh/known_hosts && touch ~/.ssh/id_rsa.pub
 
     - name: Setup knownhosts
       run: ssh-keyscan ${{ secrets.SERVER_HOST }} >> ~/.ssh/known_hosts
