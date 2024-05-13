@@ -1,7 +1,6 @@
-from fastapi import APIRouter
+from fastapi import APIRouter, Body
 
 from wechat.models import Config
-from wechat.config import ConfigKey
 
 
 router = APIRouter()
@@ -12,8 +11,8 @@ router = APIRouter()
     description="添加或者修改一项配置",
 )
 async def create_or_update(
-    key: ConfigKey,
-    value: str,
+    key: str = Body(),
+    value: str = Body(),
 ):
     config = await Config.get_or_none(key=key)
     if config is None:

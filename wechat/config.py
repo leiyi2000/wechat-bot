@@ -1,5 +1,3 @@
-from enum import StrEnum
-
 import structlog
 
 from wechat.models import Config as ConfigModel
@@ -8,10 +6,11 @@ from wechat.models import Config as ConfigModel
 log = structlog.get_logger()
 
 
-class ConfigKey(StrEnum):
-    lol_wegame_cookie = "lol_wegame_cookie"
+class ConfigKey:
+
     error_reply = "error_reply"
     weather_api_key = "weather_api_key"
+    lol_wegame_cookie = "lol_wegame_cookie"
 
 
 async def lol_wegame_cookie() -> str:
