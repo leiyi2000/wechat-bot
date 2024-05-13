@@ -17,12 +17,16 @@ WORKDIR /app
 # 拷贝requirements.txt
 COPY --from=requirements-stage /tmp/requirements.txt /app/requirements.txt
 # 设置为中国国内源
-RUN	mv /etc/apt/sources.list /etc/apt/sources.list.old \
-      && echo 'deb https://mirrors.aliyun.com/ubuntu/ trusty main restricted universe multiverse' >> /etc/apt/sources.list \
-      && echo 'deb https://mirrors.aliyun.com/ubuntu/ trusty-security main restricted universe multiverse' >> /etc/apt/sources.list \
-      && echo 'deb https://mirrors.aliyun.com/ubuntu/ trusty-updates main restricted universe multiverse' >> /etc/apt/sources.list \
-      && echo 'deb https://mirrors.aliyun.com/ubuntu/ trusty-proposed main restricted universe multiverse' >> /etc/apt/sources.list \
-      && echo 'deb https://mirrors.aliyun.com/ubuntu/ trusty-backports main restricted universe multiverse' >> /etc/apt/sources.list
+RUN echo "deb http://mirrors.aliyun.com/ubuntu/ bionic main restricted universe multiverse\n\
+deb http://mirrors.aliyun.com/ubuntu/ bionic-security main restricted universe multiverse\n\
+deb http://mirrors.aliyun.com/ubuntu/ bionic-updates main restricted universe multiverse\n\
+deb http://mirrors.aliyun.com/ubuntu/ bionic-proposed main restricted universe multiverse\n\
+deb http://mirrors.aliyun.com/ubuntu/ bionic-backports main restricted universe multiverse\n\
+deb-src http://mirrors.aliyun.com/ubuntu/ bionic main restricted universe multiverse\n\
+deb-src http://mirrors.aliyun.com/ubuntu/ bionic-security main restricted universe multiverse\n\
+deb-src http://mirrors.aliyun.com/ubuntu/ bionic-updates main restricted universe multiverse\n\
+deb-src http://mirrors.aliyun.com/ubuntu/ bionic-proposed main restricted universe multiverse\n\
+deb-src http://mirrors.aliyun.com/ubuntu/ bionic-backports main restricted universe multiverse" > /etc/apt/sources.list
 # 安装依赖
 RUN pip config set global.index-url https://pypi.tuna.tsinghua.edu.cn/simple
 RUN pip install --no-cache-dir -r /app/requirements.txt
