@@ -6,7 +6,7 @@ async def upgrade(db: BaseDBAsyncClient) -> str:
         CREATE TABLE IF NOT EXISTS "config" (
     "id" INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,
     "key" VARCHAR(64) NOT NULL UNIQUE,
-    "value" VARCHAR(256) NOT NULL,
+    "value" TEXT NOT NULL,
     "created_at" TIMESTAMP NOT NULL  DEFAULT CURRENT_TIMESTAMP,
     "updated_at" TIMESTAMP NOT NULL  DEFAULT CURRENT_TIMESTAMP
 );
