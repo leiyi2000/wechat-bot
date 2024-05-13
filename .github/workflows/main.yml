@@ -41,9 +41,9 @@ jobs:
     - name: Setup SSH 5
       run: chmod 600 ~/.ssh/id_rsa && chmod 644 ~/.ssh/id_rsa.pub
 
-    - name: Setup SSH 6
-      run: ssh root@${{ secrets.SERVER_HOST }} echo "Hello World"
-
     - name: Sync files
       run: |
         rsync -av --delete code/ root@${{ secrets.SERVER_HOST }}:/root/apps/wechat
+
+    - name: Run
+      run: ssh root@${{ secrets.SERVER_HOST }} "export IMAGE_TAG=${{ steps.branch_sha.outputs.hash }}${{ steps.date.outputs.date }} && cd /root/apps/wechat && docker compose up -d"
