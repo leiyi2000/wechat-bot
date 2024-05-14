@@ -10,7 +10,7 @@ COPY ./pyproject.toml ./pdm.lock* /tmp/
 RUN pdm export -f requirements --output requirements.txt --without-hashes
 
 
-FROM python:3.11-slim-bullseye
+FROM ylei2023/playwright:1.43.0
 
 WORKDIR /app
 
