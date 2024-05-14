@@ -1,4 +1,5 @@
 """消息事件"""
+
 import json
 
 import structlog

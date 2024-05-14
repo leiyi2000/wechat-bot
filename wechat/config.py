@@ -31,16 +31,22 @@ class Config:
         return await self._find(ConfigKey.lol_wegame_cookie)
 
     async def error_reply(self) -> str:
-        return await self._find(ConfigKey.error_reply, default="哼哼~~, 才不是我的问题!")
+        return await self._find(
+            ConfigKey.error_reply, default="哼哼~~, 才不是我的问题!"
+        )
 
     async def weather_api_key(self) -> str:
         return await self._find(ConfigKey.weather_api_key, default="")
 
     async def setu_api(self) -> str:
-        return await self._find(ConfigKey.setu_api, default="https://api.anosu.top/img?$alias=cloud.jpg")
+        return await self._find(
+            ConfigKey.setu_api, default="https://api.anosu.top/img?$alias=cloud.jpg"
+        )
 
     async def kfc_api(self) -> str:
-        return await self._find(ConfigKey.kfc_api, default="https://api.jixs.cc/api/wenan-fkxqs/index.php")
+        return await self._find(
+            ConfigKey.kfc_api, default="https://api.jixs.cc/api/wenan-fkxqs/index.php"
+        )
 
     async def news_api_key(self) -> str:
         return await self._find(ConfigKey.news_api_key, default="")

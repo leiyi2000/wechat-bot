@@ -160,6 +160,7 @@ async def run_command(router: CommandRouter, event: EventSchema):
             await reply(event, reply_message)
         except Exception:
             import traceback
+
             log.error(traceback.format_exc())
             reply_message = await config.error_reply()
             await reply(event, reply_message)
