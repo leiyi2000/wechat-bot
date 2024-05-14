@@ -3,6 +3,7 @@ import httpx
 from wechat import config
 from wechat.schemas import Event
 from wechat.command import CommandRouter
+from typing import List, Dict, Any
 
 router = CommandRouter()
 
@@ -18,4 +19,13 @@ async def get_news(event: Event):
             "http://v.juhe.cn/toutiao/index", params=params, headers=headers
         )
         data = response.json()["result"]["data"]
-    return json.dumps(data, indent=4, ensure_ascii=False)
+        result_data: List[Dict[str, Any]] = [
+            {
+                "title": item["title"],
+                "date": item["date"],
+                "author_name": item["author_name"],
+                "url": item["url"],
+            }
+            for item in data
+        ]
+    return json.dumps(result_data, indent=4, ensure_ascii=False)
