@@ -6,6 +6,7 @@ from wechat.plugins import (
     epic,
     kfc,
     lol,
+    news,
 )
 
 
@@ -17,3 +18,4 @@ router.include_router(setu.router)
 router.include_router(epic.router)
 router.include_router(weather.router)
 router.include_router(bilibili.router)
+router.include_router(news.router)

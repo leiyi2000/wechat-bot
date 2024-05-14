@@ -12,6 +12,7 @@ class ConfigKey:
     error_reply = "error_reply"
     weather_api_key = "weather_api_key"
     lol_wegame_cookie = "lol_wegame_cookie"
+    news_api_key = "news_api_key"
 
 
 async def lol_wegame_cookie() -> str:
@@ -54,5 +55,14 @@ async def kfc_api() -> str:
     if config is None:
         log.warning("kfc_api is not set")
         return "https://api.jixs.cc/api/wenan-fkxqs/index.php"
+    else:
+        return config.value
+
+
+async def news_api_key() -> str:
+    config = await ConfigModel.get_or_none(key=ConfigKey.news_api_key)
+    if config is None:
+        log.warning("news_api_key is not set")
+        return ""
     else:
         return config.value
