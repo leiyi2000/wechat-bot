@@ -129,8 +129,8 @@ async def reply(
         if isinstance(reply_message, str):
             reply_message = Message(type=MessageType.text, content=reply_message)
         reply = ReplyMessage(
-            to=to, 
-            data=reply_message, 
+            to=to,
+            data=reply_message,
             is_room=event.is_room,
         ).model_dump(by_alias=True)
         async with httpx.AsyncClient() as client:
