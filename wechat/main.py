@@ -7,13 +7,15 @@ from fastapi import FastAPI
 from tortoise.contrib.fastapi import register_tortoise
 
 from wechat.api import router
-from wechat.settings import APP_NAME, TORTOISE_ORM
+from wechat.settings import APP_NAME, TORTOISE_ORM, ROOT_PATH
 
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
     command = Command(
-        tortoise_config=TORTOISE_ORM, app=APP_NAME, location="./migrations"
+        tortoise_config=TORTOISE_ORM,
+        app=APP_NAME,
+        location="./migrations",
     )
     await command.init()
     await command.upgrade(run_in_transaction=True)

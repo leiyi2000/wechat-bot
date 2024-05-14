@@ -2,8 +2,6 @@ version: '3.8'
 services:
   wxBotWebhook:
     image: dannicool/docker-wechatbot-webhook
-    volumes:
-      - ./logs:/app/log
     environment:
       - LOG_LEVEL=info
       - DISABLE_AUTO_LOGIN=false
@@ -19,8 +17,9 @@ services:
     volumes:
       - sqlite3-volume:/app/db
     environment:
-      - WX_BOT_API=${WX_BOT_API:-http://wxBotWebhook:3001/webhook/msg/v2?token=123456}
+      - ROOT_PATH=${ROOT_PATH:-}
       - DATABASE_URL=${DATABASE_URL:-sqlite://db/wechat.sqlite3}
+      - WX_BOT_API=${WX_BOT_API:-http://wxBotWebhook:3001/webhook/msg/v2?token=123456}
     ports:
       - "3002:8000"
     restart: always
