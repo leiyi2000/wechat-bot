@@ -22,9 +22,9 @@ async def receive(
     type: str = Form(...),
     content: str | bytes = Form(...),
     source: str = Form(...),
-    mentioned: int = Form(alias="isMentioned"),
-    system_event: int = Form(alias="isSystemEvent"),
-    msg_from_self: int = Form(alias="isMsgFromSelf"),
+    mentioned: int = Form(alias="isMentioned", default=0),
+    system_event: int = Form(alias="isSystemEvent", default=0),
+    msg_from_self: int = Form(alias="isMsgFromSelf", default=0),
 ):
     event = {
         "type": type,

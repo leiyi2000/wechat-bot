@@ -4,7 +4,7 @@ import httpx
 import jinja2
 
 from wechat import render
-from wechat import config
+from wechat.config import config
 from wechat.command import CommandRouter
 from wechat.settings import TEMPLATE_DIR
 from wechat.schemas import Event, FileMessage

@@ -2,7 +2,7 @@ import json
 
 import httpx
 
-from wechat import config
+from wechat.config import config
 from wechat.schemas import Event
 from wechat.command import CommandRouter
 

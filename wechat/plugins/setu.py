@@ -1,6 +1,4 @@
-"""ST指令"""
-
-from wechat import config
+from wechat.config import config
 from wechat.command import CommandRouter
 from wechat.schemas import (
     Message,

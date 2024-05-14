@@ -1,6 +1,6 @@
 import httpx
 
-from wechat import config
+from wechat.config import config
 from wechat.command import CommandRouter
 
 

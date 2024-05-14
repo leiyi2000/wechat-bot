@@ -1,9 +1,10 @@
 import json
 import httpx
-from wechat import config
+from wechat.config import config
 from wechat.schemas import Event
 from wechat.command import CommandRouter
 from typing import List, Dict, Any
+
 
 router = CommandRouter()
 
@@ -16,7 +17,9 @@ async def get_news(event: Event):
     headers = {"Content-Type": "application/x-www-form-urlencoded"}
     async with httpx.AsyncClient() as client:
         response = await client.get(
-            "http://v.juhe.cn/toutiao/index", params=params, headers=headers
+            "http://v.juhe.cn/toutiao/index",
+            params=params,
+            headers=headers,
         )
         data = response.json()["result"]["data"]
         result_data: List[Dict[str, Any]] = [
