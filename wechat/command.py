@@ -128,7 +128,11 @@ async def reply(
     else:
         if isinstance(reply_message, str):
             reply_message = Message(type=MessageType.text, content=reply_message)
-        reply = ReplyMessage(to=to, data=reply_message).model_dump(by_alias=True)
+        reply = ReplyMessage(
+            to=to, 
+            data=reply_message, 
+            is_room=event.is_room,
+        ).model_dump(by_alias=True)
         async with httpx.AsyncClient() as client:
             response = await client.post(WX_BOT_API, json=reply)
     response.raise_for_status()
