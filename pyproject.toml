@@ -23,9 +23,9 @@ license = {text = "MIT"}
 
 [tool.pdm.dev-dependencies]
 dev = [
-    "ruff",
-    "httpx",
-    "pre-commit"
+    "ruff>=0.4.4",
+    "httpx>=0.27.0",
+    "pre-commit>=3.7.1",
 ]
 
 [tool.pdm]
@@ -113,6 +113,9 @@ docstring-code-line-length = "dynamic"
 # 开发环境
 dev.env_file.override = ".env"
 dev.cmd = "uvicorn wechat.main:app --host 0.0.0.0 --port 8000 --reload"
+# 安装后运行
+post_install = "playwright install --with-deps chromium"
+post_lock = "pre-commit install"
 
 [tool.aerich]
 tortoise_orm = "wechat.settings.TORTOISE_ORM"
