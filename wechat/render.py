@@ -55,7 +55,7 @@ async def url_to_image(
         chromium = playwright.chromium
         browser = await chromium.launch()
         page = await browser.new_page()
-        await page.goto(url, timeout=60000, wait_until='load')
+        await page.goto(url, timeout=60000, wait_until="load")
         if dom:
             page = await page.wait_for_selector(dom)
         return await page.screenshot(path=path, type=type, quality=quality)
