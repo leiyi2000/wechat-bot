@@ -7,7 +7,7 @@ from fastapi import FastAPI
 from tortoise.contrib.fastapi import register_tortoise
 
 from wechat.api import router
-from wechat.settings import APP_NAME, TORTOISE_ORM, ROOT_PATH
+from wechat.settings import APP_NAME, TORTOISE_ORM
 
 
 @asynccontextmanager
@@ -27,7 +27,7 @@ async def lifespan(app: FastAPI):
     yield
 
 
-app = FastAPI(root_path=ROOT_PATH, lifespan=lifespan)
+app = FastAPI(lifespan=lifespan)
 app.include_router(router)
 
 

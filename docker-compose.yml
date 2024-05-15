@@ -17,7 +17,6 @@ services:
     volumes:
       - sqlite3-volume:/app/db
     environment:
-      - ROOT_PATH=${ROOT_PATH:-}
       - DATABASE_URL=${DATABASE_URL:-sqlite://db/wechat.sqlite3}
       - WX_BOT_API=${WX_BOT_API:-http://wxBotWebhook:3001/webhook/msg/v2?token=123456}
     ports:
