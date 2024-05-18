@@ -14,6 +14,7 @@ class ConfigKey:
     error_reply = "error_reply"
     news_api_key = "news_api_key"
     weather_api_key = "weather_api_key"
+    lol_wegame_cookie = "lol_wegame_cookie"
 
 
 class Config:
@@ -40,12 +41,14 @@ class Config:
 
     async def setu_api(self) -> str:
         return await self._find(
-            ConfigKey.setu_api, default="https://api.anosu.top/img?$alias=cloud.jpg"
+            ConfigKey.setu_api,
+            default="https://api.anosu.top/img?$alias=cloud.jpg",
         )
 
     async def kfc_api(self) -> str:
         return await self._find(
-            ConfigKey.kfc_api, default="https://api.jixs.cc/api/wenan-fkxqs/index.php"
+            ConfigKey.kfc_api,
+            default="https://api.jixs.cc/api/wenan-fkxqs/index.php",
         )
 
     async def news_api_key(self) -> str:
