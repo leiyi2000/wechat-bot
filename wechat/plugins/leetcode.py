@@ -10,15 +10,17 @@ router = CommandRouter()
 
 @router.command("每日一题", event_arg=False)
 async def day():
-    url = "https://leetcode.cn/graphql/"
+    # 判断是否过期
+    url = "https://leetcode.cn/graphql"
     payload = {
-        "query": "\n    query CalendarTaskSchedule($days: Int!) {\n  calendarTaskSchedule(days: $days) {\n    contests {\n      id\n      name\n      slug\n      progress\n      link\n      premiumOnly\n    }\n    dailyQuestions {\n      id\n      name\n      slug\n      progress\n      link\n      premiumOnly\n    }\n    studyPlans {\n      id\n      name\n      slug\n      progress\n      link\n      premiumOnly\n    }\n  }\n}\n    ",
+        "query": "query CalendarTaskSchedule($days: Int!) {calendarTaskSchedule(days: $days) {contests {  id  name  slug  progress  link  premiumOnly}dailyQuestions {  id  name  slug  progress  link  premiumOnly}studyPlans {  id  name  slug  progress  link  premiumOnly}}}",
         "variables": {"days": 0},
         "operationName": "CalendarTaskSchedule",
     }
     async with httpx.AsyncClient() as client:
         response = await client.post(url, json=payload)
     link = response.json()["data"]["calendarTaskSchedule"]["dailyQuestions"][0]["link"]
-    # 调用link渲染图片
+    # 请求地址渲染图片
     image = await render.url_to_image(link, dom=".flexlayout__tab")
-    return FileMessage(filename="leetcode.png", content=image)
+    file_message = FileMessage(filename="leetcode.png", content=image)
+    return file_message

@@ -3,18 +3,11 @@ from typing import Callable, Any, List, Dict
 import asyncio
 from functools import partial
 
-import httpx
 import structlog
 
+from wechat import hook
 from wechat.config import config
-from wechat.settings import WX_BOT_API, WX_BOT_API_V1
-from wechat.schemas import (
-    Message,
-    FileMessage,
-    MessageType,
-    ReplyMessage,
-    Event as EventSchema,
-)
+from wechat.schemas import Event
 
 
 log = structlog.get_logger()
@@ -39,7 +32,7 @@ class CommandRoute:
         self.limit_room = limit_room
         self.func_kwargs = func_kwargs
 
-    def match(self, event: EventSchema) -> bool:
+    def match(self, event: Event) -> bool:
         if self.limit_room and not event.is_room:
             return False
         return event.content.startswith(self.prefix)
@@ -89,7 +82,7 @@ class CommandRouter:
 
         return decorator
 
-    def matches(self, event: EventSchema) -> List[CommandRoute]:
+    def matches(self, event: Event) -> List[CommandRoute]:
         return [route for route in self.routes if route.match(event)]
 
     def include_router(self, router: "CommandRouter"):
@@ -97,55 +90,12 @@ class CommandRouter:
             self.add_route(route)
 
 
-async def reply(
-    event: EventSchema,
-    reply_message: List[Message] | Message | FileMessage | str | None,
-):
-    """回复消息.
-
-    Args:
-        event (EventSchema): 消息事件.
-        reply_message (List[Message] | Message | FileMessage | str | None): 回复内容.
-    """
-    if reply_message is None or not reply_message:
-        return
-    if event.is_room:
-        is_room = "1"
-        to = event.source.room.topic
-    else:
-        is_room = "0"
-        to = event.source.from_user.name
-    if isinstance(reply_message, FileMessage):
-        files = {
-            "content": (reply_message.filename, reply_message.content),
-        }
-        data = {
-            "to": to,
-            "isRoom": is_room,
-        }
-        async with httpx.AsyncClient() as client:
-            response = await client.post(WX_BOT_API_V1, data=data, files=files)
-    else:
-        if isinstance(reply_message, str):
-            reply_message = Message(type=MessageType.text, content=reply_message)
-        reply = ReplyMessage(
-            to=to,
-            data=reply_message,
-            isRoom=event.is_room,
-        )
-        reply = reply.model_dump(by_alias=True)
-        async with httpx.AsyncClient() as client:
-            response = await client.post(WX_BOT_API, json=reply)
-    response.raise_for_status()
-    assert response.json()["success"], response.text
-
-
-async def run_command(router: CommandRouter, event: EventSchema):
+async def run_command(router: CommandRouter, event: Event):
     """路由命令执行.
 
     Args:
         router (CommandRouter): 命令路由器.
-        event (EventSchema): 消息事件.
+        event (Event): 消息事件.
     """
     routes = router.matches(event)
     for route in routes:
@@ -157,10 +107,10 @@ async def run_command(router: CommandRouter, event: EventSchema):
                 reply_message = await func(**route.func_kwargs)
             else:
                 reply_message = func(**route.func_kwargs)
-            await reply(event, reply_message)
+            await hook.reply(event.to, event.is_room, reply_message)
         except Exception:
             import traceback
 
             log.error(traceback.format_exc())
             reply_message = await config.error_reply()
-            await reply(event, reply_message)
+            await hook.reply(event.to, event.is_room, reply_message)

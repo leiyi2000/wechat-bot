@@ -1,5 +1,7 @@
 """服务入口"""
 
+import asyncio
+
 from contextlib import asynccontextmanager
 
 from aerich import Command
@@ -7,6 +9,7 @@ from fastapi import FastAPI
 from tortoise.contrib.fastapi import register_tortoise
 
 from wechat.api import router
+from wechat.plugins import schedule
 from wechat.settings import APP_NAME, TORTOISE_ORM
 
 
@@ -24,6 +27,8 @@ async def lifespan(app: FastAPI):
         config=TORTOISE_ORM,
         add_exception_handlers=False,
     )
+    # 执行注入的job
+    asyncio.create_task(schedule.run())
     yield
 
 

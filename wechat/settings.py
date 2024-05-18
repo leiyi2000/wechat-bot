@@ -2,7 +2,7 @@ import os
 
 
 APP_NAME = "wechat"
-WX_BOT_API = os.environ.get("WX_BOT_API")
+WX_BOT_API = os.environ["WX_BOT_API"]
 WX_BOT_API_V1 = WX_BOT_API.replace("/v2", "")
 DATABASE_URL = os.environ.get("DATABASE_URL", default="sqlite://wechat.sqlite3")
 TEMPLATE_DIR = os.path.join(

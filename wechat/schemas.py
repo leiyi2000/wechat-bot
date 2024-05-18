@@ -71,6 +71,13 @@ class Event(BaseModel):
     def is_room(self):
         return self.source.room is not None
 
+    @property
+    def to(self):
+        if self.is_room:
+            return self.source.room.topic
+        else:
+            return self.source.from_user.name
+
 
 class MessageType(StrEnum):
     """消息类型"""

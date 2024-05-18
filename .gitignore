@@ -164,6 +164,3 @@ logs/
 .vscode/
 *.ipynb
 *.sqlite3*
-*.jpg
-*.png
-
