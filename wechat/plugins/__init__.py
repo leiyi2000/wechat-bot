@@ -1,4 +1,3 @@
-from wechat.schedule import Schedule
 from wechat.command import CommandRouter
 from wechat.plugins import (
     bilibili,
@@ -22,7 +21,3 @@ router.include_router(weather.router)
 router.include_router(bilibili.router)
 router.include_router(news.router)
 router.include_router(leetcode.router)
-
-
-# 定时任务
-schedule = Schedule()

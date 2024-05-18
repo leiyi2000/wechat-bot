@@ -9,7 +9,7 @@ from fastapi import FastAPI
 from tortoise.contrib.fastapi import register_tortoise
 
 from wechat.api import router
-from wechat.plugins import schedule
+from wechat.schedule import schedule
 from wechat.settings import APP_NAME, TORTOISE_ORM
 
 
