@@ -93,7 +93,6 @@ class Job:
             # 补救-2月特殊月份
             while not self._are_you_ok(next_run, target_mdhms):
                 next_run += timedelta(days=1)
-        self.last_run = self.next_run
         # 日志记录
         log.info(f"[Job] {self.func.__name__} next run: {next_run}")
         return next_run
@@ -113,6 +112,7 @@ class Job:
         return self._interval
 
     async def run(self):
+        self.last_run = self.next_run
         self.next_run = self._next_run()
         try:
             if asyncio.iscoroutinefunction(self.func):
