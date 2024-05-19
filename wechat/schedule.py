@@ -1,11 +1,14 @@
 """定时任务"""
 
 from typing import Callable, Any, List
-from asyncio import Task
 
 import asyncio
-
 from datetime import datetime, timedelta
+
+import structlog
+
+
+log = structlog.get_logger()
 
 
 class Job:
@@ -33,7 +36,7 @@ class Job:
         self.invalid = False
         self._interval = None
         self.last_run: datetime = datetime.now()
-        self.next_run: datetime = self._get_next_run()
+        self.next_run: datetime = self._next_run()
 
     def _are_you_ok(
         self,
@@ -54,9 +57,11 @@ class Job:
                 return False
         return True
 
-    def _get_next_run(self):
+    def _next_run(self):
         if self.interval is not None:
-            run_datetime = self.last_run + timedelta(seconds=self.interval)
+            next_run = self.last_run + timedelta(seconds=self.interval)
+        elif self.once:
+            next_run = self.once
         else:
             # 解析at获取下次运行时间, (月, 日, 时, 分, 秒) = * * * * *
             target_mdhms = self.at.split(" ")
@@ -83,12 +88,15 @@ class Job:
                     target_mdhms[i] = int(target_mdhms[i])
                     mdhms.append(target_mdhms[i])
                     max_timedelta = max(max_timedelta, timedeltas[i])
-            run_datetime = datetime(self.last_run.year, *mdhms)
-            run_datetime += max_timedelta
+            next_run = datetime(self.last_run.year, *mdhms)
+            next_run += max_timedelta
             # 补救-2月特殊月份
-            while not self._are_you_ok(run_datetime, target_mdhms):
-                run_datetime += timedelta(days=1)
-        return run_datetime
+            while not self._are_you_ok(next_run, target_mdhms):
+                next_run += timedelta(days=1)
+        self.last_run = self.next_run
+        # 日志记录
+        log.info(f"[Job] {self.func.__name__} next run: {next_run}")
+        return next_run
 
     @property
     def interval(self):
@@ -105,7 +113,7 @@ class Job:
         return self._interval
 
     async def run(self):
-        self.refresh_next_run()
+        self.next_run = self._next_run()
         try:
             if asyncio.iscoroutinefunction(self.func):
                 return await self.func()
@@ -115,10 +123,6 @@ class Job:
             # 标记这个job永远无法执行
             self.invalid = bool(self.once)
 
-    def refresh_next_run(self):
-        self.last_run = self.next_run
-        self.next_run = self._get_next_run()
-
     @property
     def ready(self) -> bool:
         return datetime.now() > self.next_run
@@ -127,7 +131,7 @@ class Job:
 class Schedule:
     def __init__(self) -> None:
         self.jobs: List[Job] = []
-        self.tasks: List[Task] = []
+        self.tasks: List[asyncio.Task] = []
 
     def validate_at(sel, at: str) -> bool:
         if at is None:
@@ -183,12 +187,11 @@ class Schedule:
             for job in self.jobs:
                 if job.ready:
                     self.tasks.append(asyncio.create_task(job.run()))
-            await asyncio.sleep(0.1)
-            # 间隔10s清理
             if clear_interval > 10:
                 self.clear()
                 clear_interval = 0
             clear_interval += interval
+            await asyncio.sleep(0.1)
 
     def add_jobs(
         self,

@@ -98,12 +98,12 @@
 
 - 配置天气密钥-(高德的天气密钥)
   ```code
-    curl -X 'POST' \
-    'http://127.0.0.1:3002/config' \
-    -H 'accept: application/json' \
-    -H 'Content-Type: application/json' \
-    -d '{
-    "key": "weather_api_key",
-    "value": "xxxxxxxxxxxxxxx"
+  curl -X 'POST' \
+  'http://127.0.0.1:3002/config' \
+  -H 'accept: application/json' \
+  -H 'Content-Type: application/json' \
+  -d '{
+  "key": "weather_api_key",
+  "value": "xxxxxxxxxxxxxxx"
   }'
   ```
