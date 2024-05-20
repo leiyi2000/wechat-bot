@@ -2,7 +2,7 @@
 
 from fastapi import APIRouter
 
-from wechat.api import event, config
+from wechat.api import event, config, weather
 
 
 router = APIRouter()
@@ -24,4 +24,11 @@ router.include_router(
     config.router,
     prefix="/config",
     tags=["配置"],
+)
+
+
+router.include_router(
+    weather.router,
+    prefix="/weather",
+    tags=["天气"],
 )

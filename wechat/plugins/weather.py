@@ -124,10 +124,9 @@ async def rain_remind_job():
     now = datetime.now()
     async for weather in models.Weather.filter(type=WeatherType.rain):
         api_key = await config.weather_api_key()
-        adcode = await get_adcode(api_key, weather.adcode)
         params = {
             "key": api_key,
-            "city": adcode,
+            "city": weather.adcode,
             "extensions": "all",
             "output": "JSON",
         }
