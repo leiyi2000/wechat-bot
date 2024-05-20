@@ -135,7 +135,7 @@ async def rain_remind_job():
             response = await client.get(url, params=params)
             response.raise_for_status()
         forecasts = response.json()["forecasts"]
-        tomorrow_weather = forecasts["casts"][1]
+        tomorrow_weather = forecasts[0]["casts"][1]
         if "雨" in (desc := tomorrow_weather["dayweather"]):
             # 准备发送消息
             reply_message = f"亲~, {weather.address}有{desc}"
