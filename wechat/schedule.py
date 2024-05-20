@@ -3,7 +3,7 @@
 from typing import Callable, Any, List
 
 import asyncio
-from datetime import datetime, timedelta, timezone
+from datetime import datetime, timedelta, tzinfo
 
 import structlog
 
@@ -21,7 +21,7 @@ class Job:
         days: int | None,
         at: str | None,
         once: datetime | None,
-        tz: timezone | None,
+        tz: tzinfo | None,
     ) -> None:
         self.func = func
         # 距离多少时长后执行
@@ -154,7 +154,7 @@ class Schedule:
         days: int | None = None,
         at: str | None = None,
         once: datetime | None = None,
-        tz: timezone | None = None,
+        tz: tzinfo | None = None,
     ):
         """异步任务装饰器, 被装饰的函数会在指定的时间自动执行, 被装饰的函数必须是无参的.
 
@@ -165,7 +165,7 @@ class Schedule:
             days (int | None, optional): 每经过X天执行.
             at (str | None, optional): 在某时刻执行24小时时间制(月, 日, 时, 分, 秒) = * * * * *.
             once (datetime | None, optional): 一次性任务，在指定是日期运行.
-            tz (timezone | None, optional): 时区.
+            tz (tzinfo | None, optional): 时区.
         """
         self.validate_at(at)
 
