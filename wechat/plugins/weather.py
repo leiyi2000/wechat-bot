@@ -1,6 +1,6 @@
 import os
 from functools import partial
-from datetime import datetime, timedelta, timezone
+from datetime import datetime, timedelta
 
 import httpx
 import jinja2

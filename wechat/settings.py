@@ -30,7 +30,7 @@ class ShanghaiTZ(tzinfo):
     def __init__(self):
         self._offset = timedelta(hours=8)
         self._name = "Asia/Shanghai"
-    
+
     def utcoffset(self, dt):
         return self._offset
 
@@ -39,6 +39,7 @@ class ShanghaiTZ(tzinfo):
 
     def dst(self, dt):
         return timedelta(0)
+
 
 # 上海时区
 SHANGHAI_TIMEZONE = ShanghaiTZ()
