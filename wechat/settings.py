@@ -1,5 +1,7 @@
 import os
 
+from datetime import tzinfo, timedelta
+
 
 APP_NAME = "wechat"
 WX_BOT_API = os.environ["WX_BOT_API"]
@@ -22,3 +24,21 @@ TORTOISE_ORM = {
     },
     "timezone": "Asia/Shanghai",
 }
+
+
+class ShanghaiTZ(tzinfo):
+    def __init__(self):
+        self._offset = timedelta(hours=8)
+        self._name = "Asia/Shanghai"
+    
+    def utcoffset(self, dt):
+        return self._offset
+
+    def tzname(self, dt):
+        return self._name
+
+    def dst(self, dt):
+        return timedelta(0)
+
+# 上海时区
+SHANGHAI_TIMEZONE = ShanghaiTZ()

@@ -1,6 +1,6 @@
 import os
 from functools import partial
-from datetime import datetime, timedelta
+from datetime import datetime, timedelta, timezone
 
 import httpx
 import jinja2
@@ -10,9 +10,9 @@ from wechat import hook
 from wechat.config import config
 from wechat import render, models
 from wechat.command import CommandRouter
-from wechat.settings import TEMPLATE_DIR
 from wechat.schedule import Job, schedule
 from wechat.schemas import Event, FileMessage
+from wechat.settings import TEMPLATE_DIR, SHANGHAI_TIMEZONE
 
 
 router = CommandRouter()
@@ -119,9 +119,9 @@ async def cancel_rain_remind(event: Event):
     return message
 
 
-@schedule.job(at="* * 23 * *")
+@schedule.job(at="* * 23 * *", tz=SHANGHAI_TIMEZONE)
 async def rain_remind_job():
-    now = datetime.now()
+    now = datetime.now(tz=SHANGHAI_TIMEZONE)
     async for weather in models.Weather.filter(type=WeatherType.rain):
         api_key = await config.weather_api_key()
         params = {
@@ -145,6 +145,7 @@ async def rain_remind_job():
                 month=now.month,
                 day=now.day,
                 hour=weather.at_hour,
+                tzinfo=SHANGHAI_TIMEZONE,
             )
             send_datetime += timedelta(days=1)
             job = Job(func, once=send_datetime)

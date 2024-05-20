@@ -3,7 +3,7 @@
 from typing import Callable, Any, List
 
 import asyncio
-from datetime import datetime, timedelta
+from datetime import datetime, timedelta, timezone
 
 import structlog
 
@@ -21,6 +21,7 @@ class Job:
         days: int | None,
         at: str | None,
         once: datetime | None,
+        tz: timezone | None,
     ) -> None:
         self.func = func
         # 距离多少时长后执行
@@ -35,7 +36,9 @@ class Job:
         # 标记这个job是否永远不可执行
         self.invalid = False
         self._interval = None
-        self.last_run: datetime = datetime.now()
+        # 时区
+        self.tz = tz
+        self.last_run: datetime = datetime.now(tz)
         self.next_run: datetime = self._next_run()
 
     def _are_you_ok(
@@ -43,7 +46,7 @@ class Job:
         check_datetime: datetime,
         target_mdhms: List[str | int],
     ) -> bool:
-        if check_datetime < self.last_run:
+        if check_datetime <= self.last_run:
             return False
         mdhms = [
             check_datetime.month,
@@ -88,13 +91,16 @@ class Job:
                     target_mdhms[i] = int(target_mdhms[i])
                     mdhms.append(target_mdhms[i])
                     max_timedelta = max(max_timedelta, timedeltas[i])
-            next_run = datetime(self.last_run.year, *mdhms)
+            next_run = datetime(self.last_run.year, *mdhms, tzinfo=self.tz)
             # 补救-2月特殊月份
             while not self._are_you_ok(next_run, target_mdhms):
-                next_run += timedelta(days=1)
-        # 日志记录
+                next_run += max_timedelta
         log.info(f"[Job] {self.func.__name__} next run: {next_run}")
         return next_run
+
+    def refresh_next_run(self):
+        self.last_run = self.next_run
+        self.next_run = self._next_run()
 
     @property
     def interval(self):
@@ -111,8 +117,6 @@ class Job:
         return self._interval
 
     async def run(self):
-        self.last_run = self.next_run
-        self.next_run = self._next_run()
         try:
             if asyncio.iscoroutinefunction(self.func):
                 return await self.func()
@@ -124,7 +128,7 @@ class Job:
 
     @property
     def ready(self) -> bool:
-        return datetime.now() > self.next_run
+        return datetime.now(self.tz) >= self.next_run
 
 
 class Schedule:
@@ -150,6 +154,7 @@ class Schedule:
         days: int | None = None,
         at: str | None = None,
         once: datetime | None = None,
+        tz: timezone | None = None,
     ):
         """异步任务装饰器, 被装饰的函数会在指定的时间自动执行, 被装饰的函数必须是无参的.
 
@@ -160,11 +165,12 @@ class Schedule:
             days (int | None, optional): 每经过X天执行.
             at (str | None, optional): 在某时刻执行24小时时间制(月, 日, 时, 分, 秒) = * * * * *.
             once (datetime | None, optional): 一次性任务，在指定是日期运行.
+            tz (timezone | None, optional): 时区.
         """
         self.validate_at(at)
 
         def decorator(func: Callable[..., Any]):
-            job = Job(func, seconds, minutes, hours, days, at, once)
+            job = Job(func, seconds, minutes, hours, days, at, once, tz)
             self.jobs.append(job)
             return func
 
@@ -172,12 +178,8 @@ class Schedule:
 
     def clear(self):
         """清理无效的job和执行完毕的task."""
-        for i in range(len(self.jobs)):
-            if self.jobs[i].invalid:
-                self.jobs.pop(i)
-        for i in range(len(self.tasks)):
-            if self.tasks[i].done():
-                self.tasks.pop(i)
+        self.jobs = [job for job in self.jobs if not job.invalid]
+        self.tasks = [task for task in self.tasks if not task.done()]
 
     async def run(self):
         interval = 0.1
@@ -185,6 +187,8 @@ class Schedule:
         while True:
             for job in self.jobs:
                 if job.ready:
+                    # 刷新下次运行时间, 防止重复运行
+                    job.refresh_next_run()
                     self.tasks.append(asyncio.create_task(job.run()))
             if clear_interval > 10:
                 self.clear()
