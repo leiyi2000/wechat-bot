@@ -12,5 +12,3 @@ router = APIRouter()
 )
 async def reads():
     return await models.Weather.all()
-
-
