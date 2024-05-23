@@ -1,4 +1,4 @@
-from typing import Literal
+from typing import Literal, Dict
 
 from playwright.async_api import async_playwright
 
@@ -17,7 +17,7 @@ async def html_to_image(
         path (str | None, optional): 图片保存路径.
         dom (str | None, optional): 定位dom元素如: "#main".
         quality (int | None, optional): 图片质量1~100.
-        type (Literal[&quot;jpeg&quot;, &quot;png&quot;], optional):图片类型.
+        type (Literal["jpeg", "png"], optional): 图片类型.
 
     Returns:
         bytes: 图片.
@@ -38,6 +38,7 @@ async def url_to_image(
     dom: str | None = None,
     quality: int | None = None,
     type: Literal["jpeg", "png"] = "png",
+    headers: Dict[str, str] | None = None,
 ) -> bytes:
     """html渲染为图片.
 
@@ -46,7 +47,8 @@ async def url_to_image(
         path (str | None, optional): 图片保存路径.
         dom (str | None, optional): 定位dom元素如: "#main".
         quality (int | None, optional): 图片质量1~100.
-        type (Literal[&quot;jpeg&quot;, &quot;png&quot;], optional):图片类型.
+        type (Literal["jpeg", "png"], optional): 图片类型.
+        headers (Dict[str, str] | None, optional): 请求头.
 
     Returns:
         bytes: 图片.
@@ -55,6 +57,8 @@ async def url_to_image(
         chromium = playwright.chromium
         browser = await chromium.launch()
         page = await browser.new_page()
+        if headers:
+            await page.set_extra_http_headers(headers=headers)
         await page.goto(url, wait_until="load")
         if dom:
             page = await page.wait_for_selector(dom)
