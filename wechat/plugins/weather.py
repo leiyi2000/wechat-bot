@@ -119,7 +119,7 @@ async def cancel_rain_remind(event: Event):
     return message
 
 
-@schedule.job(at="* * 23 * *", tz=SHANGHAI_TIMEZONE)
+@schedule.job(at="* * 18 * *", tz=SHANGHAI_TIMEZONE)
 async def rain_remind_job():
     now = datetime.now(tz=SHANGHAI_TIMEZONE)
     async for weather in models.Weather.filter(type=WeatherType.rain):

@@ -1,10 +1,14 @@
+import os
 import json
 
 import httpx
+import jinja2
 
+from wechat import render
 from wechat.config import config
-from wechat.schemas import Event
 from wechat.command import CommandRouter
+from wechat.settings import TEMPLATE_DIR
+from wechat.schemas import Event, FileMessage
 
 
 router = CommandRouter()
@@ -37,7 +41,19 @@ async def player_search(event: Event):
         }
         response = await client.post(url, json=payload, headers=headers)
         response.raise_for_status()
-    return json.dumps(response.json(), indent=4, ensure_ascii=False)
+    # 添加nickname
+    data = response.json()
+    for player in data["players"]:
+        player["name"] = nickname
+    data = json.dumps(data, indent=4, ensure_ascii=False)
+    with open(
+        os.path.join(TEMPLATE_DIR, "lol_search.html.jinja2"),
+        encoding="utf-8",
+    ) as file:
+        template = jinja2.Template(file.read())
+        html = template.render(data=data)
+        image = await render.html_to_image(html, dom="#main")
+    return FileMessage(filename="weather.png", content=image)
 
 
 @router.command("lol战绩")
