@@ -15,13 +15,13 @@ class Job:
     def __init__(
         self,
         func: Callable[..., Any],
-        seconds: int | None,
-        minutes: int | None,
-        hours: int | None,
-        days: int | None,
-        at: str | None,
-        once: datetime | None,
-        tz: tzinfo | None,
+        seconds: int | None = None,
+        minutes: int | None = None,
+        hours: int | None = None,
+        days: int | None = None,
+        at: str | None = None,
+        once: datetime | None = None,
+        tz: tzinfo | None = None,
     ) -> None:
         self.func = func
         # 距离多少时长后执行
