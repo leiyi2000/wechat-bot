@@ -148,5 +148,5 @@ async def rain_remind_job():
                 tzinfo=SHANGHAI_TIMEZONE,
             )
             send_datetime += timedelta(days=1)
-            job = Job(func, once=send_datetime)
+            job = Job(func, once=send_datetime, tz=SHANGHAI_TIMEZONE)
             schedule.add_job(job)
