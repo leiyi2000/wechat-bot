@@ -95,7 +95,9 @@ class Job:
             # 补救-2月特殊月份
             while not self._are_you_ok(next_run, target_mdhms):
                 next_run += max_timedelta
-        log.info(f'[Job] {getattr(self.func, "__name__", "unknown")} next run: {next_run}')
+        log.info(
+            f'[Job] {getattr(self.func, "__name__", "unknown")} next run: {next_run}'
+        )
         return next_run
 
     def refresh_next_run(self):
