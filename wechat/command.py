@@ -70,7 +70,7 @@ class CommandRouter:
         def decorator(func: Callable[..., Any]):
             # 初始化一个命令路由
             route = CommandRoute(
-                name or func.__name__,
+                name or getattr(func, "__name__", "unknown"),
                 prefix,
                 func,
                 event_arg,
