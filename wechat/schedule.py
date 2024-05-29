@@ -24,6 +24,7 @@ class Job:
         tz: tzinfo | None = None,
     ) -> None:
         self.func = func
+        self.func_name = getattr(self.func, "__name__", "unknown")
         # 距离多少时长后执行
         self.seconds = seconds
         self.minutes = minutes
@@ -35,7 +36,6 @@ class Job:
         self.once = once
         # 标记这个job是否永远不可执行
         self.invalid = False
-        self._interval = None
         # 时区
         self.tz = tz
         self.last_run: datetime = datetime.now(tz)
@@ -95,42 +95,35 @@ class Job:
             # 补救-2月特殊月份
             while not self._are_you_ok(next_run, target_mdhms):
                 next_run += max_timedelta
-        log.info(
-            f'[Job] {getattr(self.func, "__name__", "unknown")} next run: {next_run}'
-        )
+        log.info(f"[Job] {self.func_name} next run: {next_run}")
         return next_run
 
     def refresh_next_run(self):
+        if self.once is not None:
+            self.invalid = True
         self.last_run = self.next_run
         self.next_run = self._next_run()
 
     @property
     def interval(self):
         interval = self.seconds
-        if self._interval is not None:
-            return self._interval
-        elif self.minutes:
+        if self.minutes:
             interval = self.minutes * 60
         elif self.hours:
             interval = self.hours * 60 * 60
         elif self.days:
             interval = self.days * 24 * 60 * 60
-        self._interval = interval
-        return self._interval
+        return interval
 
     async def run(self):
-        try:
-            if asyncio.iscoroutinefunction(self.func):
-                return await self.func()
-            else:
-                return self.func()
-        finally:
-            # 标记这个job永远无法执行
-            self.invalid = bool(self.once)
+        if asyncio.iscoroutinefunction(self.func):
+            return await self.func()
+        else:
+            return self.func()
 
     @property
     def ready(self) -> bool:
-        return datetime.now(self.tz) >= self.next_run
+        return datetime.now(self.tz) >= self.next_run and not self.invalid
 
 
 class Schedule:

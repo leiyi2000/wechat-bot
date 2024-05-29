@@ -1,6 +1,6 @@
 import os
 from functools import partial
-from datetime import datetime, timedelta
+from datetime import datetime
 
 import httpx
 import jinja2
@@ -74,7 +74,7 @@ async def rain_remind(event: Event):
         address, at_hour = args
     try:
         at_hour = int(at_hour)
-        assert 0 < at_hour < 23, "Invalid range"
+        assert 6 < at_hour < 23, "Invalid range"
         api_key = await config.weather_api_key()
         adcode = await get_adcode(api_key, address)
         weather = await models.Weather.get_or_none(
@@ -119,7 +119,7 @@ async def cancel_rain_remind(event: Event):
     return message
 
 
-@schedule.job(at="* * 18 * *", tz=SHANGHAI_TIMEZONE)
+@schedule.job(at="* * 5 * *", tz=SHANGHAI_TIMEZONE)
 async def rain_remind_job():
     now = datetime.now(tz=SHANGHAI_TIMEZONE)
     async for weather in models.Weather.filter(type=WeatherType.rain):
@@ -147,6 +147,5 @@ async def rain_remind_job():
                 hour=weather.at_hour,
                 tzinfo=SHANGHAI_TIMEZONE,
             )
-            send_datetime += timedelta(days=1)
             job = Job(func, once=send_datetime, tz=SHANGHAI_TIMEZONE)
             schedule.add_job(job)
