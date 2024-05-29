@@ -1,5 +1,6 @@
 import os
 import json
+import uuid
 
 import httpx
 import jinja2
@@ -15,7 +16,7 @@ router = CommandRouter()
 
 
 async def get_headers() -> dict:
-    cookie = await config.lol_wegame_cookie()
+    cookie = config.wegame.cookie
     return {
         "Referer": "https://www.wegame.com.cn/helper/lol/v2/index.html",
         "User-Agent": "Mozilla/5.0 (Windows NT 10.0; WOW64) AppleWebKit/537.36"
@@ -53,7 +54,7 @@ async def player_search(event: Event):
         template = jinja2.Template(file.read())
         html = template.render(data=data)
         image = await render.html_to_image(html, dom="#main")
-    return FileMessage(filename="weather.png", content=image)
+    return FileMessage(filename=f"lol/{uuid.uuid1()}.png", content=image)
 
 
 @router.command("lol战绩")

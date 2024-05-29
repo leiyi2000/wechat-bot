@@ -90,20 +90,43 @@
 
 ### 部署
 
-- 克隆项目并启动
-  ```code
-  git clone git@github.com:leiyi2000/wechat-bot.git && cd wechat-bot && docker compose up
-  ```
+**启动**
+
+    git clone git@github.com:leiyi2000/wechat-bot.git && cd wechat-bot && docker compose up
+
+### 配置
+  
+  **天气密钥**
+
+      curl -X 'POST' \
+      'http://127.0.0.1:3002/config' \
+      -H 'accept: application/json' \
+      -H 'Content-Type: application/json' \
+      -d '{
+        "key": "weather",
+        "value": "高德的天气密钥"
+      }'
 
 
-- 配置天气密钥-(高德的天气密钥)
-  ```code
-  curl -X 'POST' \
-  'http://127.0.0.1:3002/config' \
-  -H 'accept: application/json' \
-  -H 'Content-Type: application/json' \
-  -d '{
-    "key": "weather_api_key",
-    "value": "xxxxxxxxxxxxxxx"
-  }'
-  ```
+  **WEGAME**
+
+      curl -X 'POST' \
+      'http://127.0.0.1:3002/config' \
+      -H 'accept: application/json' \
+      -H 'Content-Type: application/json' \
+      -d '{
+        "key": "wegame",
+        "value": "你的WEGAMEcookie"
+      }'
+
+
+  **ALIST-(配置此项用于图床发送图片更清晰)**
+
+      curl -X 'POST' \
+        'http://127.0.0.1:8000/config' \
+        -H 'accept: application/json' \
+        -H 'Content-Type: application/json' \
+        -d '{
+        "key": "alist",
+        "value": "{\"api\":\"http:公网:xxxx\",\"api_key\":\"AList密钥\",\"path\":\"保存路径\"}"
+      }'

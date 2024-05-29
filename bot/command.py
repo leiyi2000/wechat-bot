@@ -112,5 +112,5 @@ async def run_command(router: CommandRouter, event: Event):
             import traceback
 
             log.error(traceback.format_exc())
-            reply_message = await config.error_reply()
+            reply_message = config.error.reply
             await hook.reply(event.to, event.is_room, reply_message)

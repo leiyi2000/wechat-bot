@@ -12,7 +12,7 @@ router = CommandRouter()
 @router.command("新闻")
 async def get_news(event: Event):
     type = event.content.removeprefix("新闻").strip()
-    news_api_key = await config.news_api_key()
+    news_api_key = config.news.api_key
     params = {"key": news_api_key, "type": type, "page_size": 10, "is_filter": 1}
     headers = {"Content-Type": "application/x-www-form-urlencoded"}
     async with httpx.AsyncClient() as client:

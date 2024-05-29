@@ -1,6 +1,7 @@
 from fastapi import APIRouter, Body
 
 from bot.models import Config
+from bot.config import config as bot_config
 
 
 router = APIRouter()
@@ -20,4 +21,6 @@ async def create_or_update(
     else:
         config.value = value
         await config.save()
+    # 同步更新
+    bot_config.load(key, value)
     return config

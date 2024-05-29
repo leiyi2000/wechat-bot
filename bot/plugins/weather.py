@@ -1,4 +1,5 @@
 import os
+import uuid
 from functools import partial
 from datetime import datetime
 
@@ -40,7 +41,7 @@ async def get_adcode(api_key: str, address: str) -> str:
 @router.command("天气")
 async def real_time_weather(event: Event):
     address = event.content.removeprefix("天气").strip()
-    api_key = await config.weather_api_key()
+    api_key = config.weather.amap_key
     adcode = await get_adcode(api_key, address)
     params = {
         "key": api_key,
@@ -61,7 +62,7 @@ async def real_time_weather(event: Event):
     assert len(response.json()["lives"]) > 0
     html = template.render(weather=response.json())
     image = await render.html_to_image(html, dom="#main")
-    return FileMessage(filename="weather.png", content=image)
+    return FileMessage(filename=f"weather/{uuid.uuid1()}.png", content=image)
 
 
 @router.command("下雨提醒")
@@ -75,7 +76,7 @@ async def rain_remind(event: Event):
     try:
         at_hour = int(at_hour)
         assert 6 < at_hour < 23, "Invalid range"
-        api_key = await config.weather_api_key()
+        api_key = config.weather.amap_key
         adcode = await get_adcode(api_key, address)
         weather = await models.Weather.get_or_none(
             to=event.to,
@@ -97,7 +98,6 @@ async def rain_remind(event: Event):
         message = f"作为你的机器女友, {address}如果下雨我将在{at_hour}点提醒你"
     except Exception:
         message = "添加失败"
-    print(f"message: {message}")
     return message
 
 
@@ -108,7 +108,7 @@ async def cancel_rain_remind(event: Event):
         await models.Weather.filter(to=event.to, is_room=event.is_room).delete()
         message = "删库跑路了~~"
     else:
-        api_key = await config.weather_api_key()
+        api_key = config.weather.amap_key
         adcode = await get_adcode(api_key, address)
         weather = await models.Weather.get_or_none(
             to=event.to, is_room=event.is_room, adcode=adcode
@@ -123,7 +123,7 @@ async def cancel_rain_remind(event: Event):
 async def rain_remind_job():
     now = datetime.now(tz=SHANGHAI_TIMEZONE)
     async for weather in models.Weather.filter(type=WeatherType.rain):
-        api_key = await config.weather_api_key()
+        api_key = config.weather.amap_key
         params = {
             "key": api_key,
             "city": weather.adcode,

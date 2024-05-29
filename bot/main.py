@@ -9,6 +9,7 @@ from fastapi import FastAPI
 from tortoise.contrib.fastapi import register_tortoise
 
 from bot.api import router
+from bot.config import config
 from bot.schedule import schedule
 from bot.settings import APP_NAME, TORTOISE_ORM
 
@@ -27,6 +28,8 @@ async def lifespan(app: FastAPI):
         config=TORTOISE_ORM,
         add_exception_handlers=False,
     )
+    # 从数据库中加载bot配置
+    await config.load_from_db()
     # 执行注入的job
     asyncio.create_task(schedule.run())
     yield
