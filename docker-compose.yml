@@ -18,7 +18,7 @@ services:
       - data:/app/data
     environment:
       - DATABASE_URL=${DATABASE_URL:-sqlite://data/bot.sqlite3}
-      - WX_BOT_API=${WX_BOT_API:-http://wxBotWebhook:3001/webhook/msg/v2?token=123456}
+      - WX_BOT_API=${WX_BOT_API:-http://wechat-webhook:3001/webhook/msg/v2?token=123456}
     ports:
       - "3002:8000"
     restart: always
