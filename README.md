@@ -116,11 +116,11 @@
       -H 'Content-Type: application/json' \
       -d '{
         "key": "wegame",
-        "value": "你的WEGAMEcookie"
+        "value": "你的WEGAME-cookie"
       }'
 
 
-  **ALIST-(配置此项用于图床发送图片更清晰)**
+  **ALIST-(配置此项用于文件存储发送图片更清晰)**
 
       curl -X 'POST' \
         'http://127.0.0.1:8000/config' \
@@ -128,5 +128,5 @@
         -H 'Content-Type: application/json' \
         -d '{
         "key": "alist",
-        "value": "{\"api\":\"http:公网:xxxx\",\"api_key\":\"AList密钥\",\"path\":\"保存路径\"}"
+        "value": "{\"api\":\"http://公网:xxxx\",\"api_key\":\"AList接口密钥\",\"path\":\"AList上的保存路径\"}"
       }'
