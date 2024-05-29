@@ -16,17 +16,18 @@ async def upload(
         "file-path": target_path,
     }
     files = {"file": (filename, content, "application/octet-stream")}
-    payload = {"path": path}
     async with httpx.AsyncClient() as client:
         response = await client.put(api + "/api/fs/form", files=files, headers=headers)
         response.raise_for_status()
+        # 获取文件直链
+        splice_path, name = os.path.split(filename)
+        payload = {"path": os.path.join(path, splice_path)}
         response = await client.post(
             api + "/api/fs/list",
             json=payload,
             headers=headers,
         )
         response.raise_for_status()
-    _, name = os.path.split(filename)
     for file_info in response.json()["data"]["content"]:
         if file_info["name"] == name:
             return f"{api}/d/{target_path}?sign={file_info['sign']}"
