@@ -1,8 +1,8 @@
 import httpx
 
-from wechat import render
-from wechat.schemas import FileMessage
-from wechat.command import CommandRouter
+from bot import render
+from bot.schemas import FileMessage
+from bot.command import CommandRouter
 
 
 router = CommandRouter()

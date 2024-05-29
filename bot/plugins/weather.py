@@ -6,13 +6,13 @@ import httpx
 import jinja2
 import structlog
 
-from wechat import hook
-from wechat.config import config
-from wechat import render, models
-from wechat.command import CommandRouter
-from wechat.schedule import Job, schedule
-from wechat.schemas import Event, FileMessage
-from wechat.settings import TEMPLATE_DIR, SHANGHAI_TIMEZONE
+from bot import hook
+from bot.config import config
+from bot import render, models
+from bot.command import CommandRouter
+from bot.schedule import Job, schedule
+from bot.schemas import Event, FileMessage
+from bot.settings import TEMPLATE_DIR, SHANGHAI_TIMEZONE
 
 
 router = CommandRouter()

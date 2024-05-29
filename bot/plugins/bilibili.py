@@ -1,7 +1,7 @@
 import json
 import httpx
 
-from wechat.command import CommandRouter
+from bot.command import CommandRouter
 
 
 router = CommandRouter()

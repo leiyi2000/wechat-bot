@@ -2,8 +2,8 @@ from typing import List, Dict, Tuple
 
 import httpx
 
-from wechat.command import CommandRouter
-from wechat.schemas import (
+from bot.command import CommandRouter
+from bot.schemas import (
     Event,
     Message,
     MessageType,

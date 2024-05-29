@@ -1,6 +1,6 @@
 from fastapi import APIRouter, Body
 
-from wechat.models import Config
+from bot.models import Config
 
 
 router = APIRouter()

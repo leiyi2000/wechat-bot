@@ -8,9 +8,9 @@ from aerich import Command
 from fastapi import FastAPI
 from tortoise.contrib.fastapi import register_tortoise
 
-from wechat.api import router
-from wechat.schedule import schedule
-from wechat.settings import APP_NAME, TORTOISE_ORM
+from bot.api import router
+from bot.schedule import schedule
+from bot.settings import APP_NAME, TORTOISE_ORM
 
 
 @asynccontextmanager

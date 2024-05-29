@@ -1,7 +1,7 @@
 import httpx
 
-from wechat.config import config
-from wechat.command import CommandRouter
+from bot.config import config
+from bot.command import CommandRouter
 
 
 router = CommandRouter()

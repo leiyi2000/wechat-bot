@@ -1,8 +1,8 @@
 import json
 import httpx
-from wechat.config import config
-from wechat.schemas import Event
-from wechat.command import CommandRouter
+from bot.config import config
+from bot.schemas import Event
+from bot.command import CommandRouter
 from typing import List, Dict, Any
 
 

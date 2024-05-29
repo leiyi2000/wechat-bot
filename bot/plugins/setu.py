@@ -1,6 +1,6 @@
-from wechat.config import config
-from wechat.command import CommandRouter
-from wechat.schemas import (
+from bot.config import config
+from bot.command import CommandRouter
+from bot.schemas import (
     Message,
     MessageType,
 )

@@ -4,11 +4,11 @@ import json
 import httpx
 import jinja2
 
-from wechat import render
-from wechat.config import config
-from wechat.command import CommandRouter
-from wechat.settings import TEMPLATE_DIR
-from wechat.schemas import Event, FileMessage
+from bot import render
+from bot.config import config
+from bot.command import CommandRouter
+from bot.settings import TEMPLATE_DIR
+from bot.schemas import Event, FileMessage
 
 
 router = CommandRouter()

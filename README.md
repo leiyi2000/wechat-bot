@@ -1,10 +1,10 @@
 <div align="center">
-<img src="https://raw.githubusercontent.com/leiyi2000/wechat/main/docs/resources/image/logo.jpeg" style="width:200px; height:200px; border-radius:50%;"/>
+<img src="https://raw.githubusercontent.com/leiyi2000/wechat-bot/main/docs/resources/image/logo.jpeg" style="width:200px; height:200px; border-radius:50%;"/>
 </div>
 
-![GitHub Workflow Status](https://img.shields.io/github/actions/workflow/status/leiyi2000/wechat/main.yml)
+![GitHub Workflow Status](https://img.shields.io/github/actions/workflow/status/leiyi2000/wechat-bot/main.yml)
 
-# WECHAT
+# wechat-bot
 这是一个关于微信BOT
 ***
 此项目基于 [wechatbot-webhook](https://github.com/danni-cool/wechatbot-webhook)+FastAPI+tortoise-orm开发，以 sqlite 作为数据库的微信BOT
@@ -22,7 +22,7 @@
   </tr>
   <tr>
     <td>st</td>
-    <td><img src="https://raw.githubusercontent.com/leiyi2000/wechat/main/docs/resources/image/st.webp" style="width:200px; height:100px;"></td>
+    <td><img src="https://raw.githubusercontent.com/leiyi2000/wechat-bot/main/docs/resources/image/st.webp" style="width:200px; height:100px;"></td>
   </tr>
 </table>
 </details>
@@ -54,7 +54,7 @@
   </tr>
   <tr>
     <td>天气&nbsp;成都</td>
-    <td><img src="https://raw.githubusercontent.com/leiyi2000/wechat/main/docs/resources/image/weather.jpg"></td>
+    <td><img src="https://raw.githubusercontent.com/leiyi2000/wechat-bot/main/docs/resources/image/weather.jpg"></td>
   </tr>
 </table>
 </details>
@@ -82,7 +82,7 @@
   </tr>
   <tr>
     <td><p>每日一题</p></td>
-    <td><img src="https://raw.githubusercontent.com/leiyi2000/wechat/main/docs/resources/image/leetcode.png"></td>
+    <td><img src="https://raw.githubusercontent.com/leiyi2000/wechat-bot/main/docs/resources/image/leetcode.png"></td>
   </tr>
 </table>
 </details>
@@ -92,7 +92,7 @@
 
 - 克隆项目并启动
   ```code
-  git clone git@github.com:leiyi2000/wechat.git && docker compose up
+  git clone git@github.com:leiyi2000/wechat-bot.git && cd wechat-bot && docker compose up
   ```
 
 
@@ -103,7 +103,7 @@
   -H 'accept: application/json' \
   -H 'Content-Type: application/json' \
   -d '{
-  "key": "weather_api_key",
-  "value": "xxxxxxxxxxxxxxx"
+    "key": "weather_api_key",
+    "value": "xxxxxxxxxxxxxxx"
   }'
   ```

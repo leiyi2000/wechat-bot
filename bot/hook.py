@@ -2,8 +2,8 @@ from typing import List
 
 import httpx
 
-from wechat.settings import WX_BOT_API, WX_BOT_API_V1
-from wechat.schemas import (
+from bot.settings import WX_BOT_API, WX_BOT_API_V1
+from bot.schemas import (
     Message,
     FileMessage,
     MessageType,

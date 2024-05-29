@@ -1,5 +1,5 @@
 [project]
-name = "wechat"
+name = "wechat-bot"
 version = "0.1.0"
 description = "Default template for PDM package"
 authors = [
@@ -112,12 +112,12 @@ docstring-code-line-length = "dynamic"
 [tool.pdm.scripts]
 # 开发环境
 dev.env_file.override = ".env"
-dev.cmd = "uvicorn wechat.main:app --host 0.0.0.0 --port 8000 --reload"
+dev.cmd = "uvicorn bot.main:app --host 0.0.0.0 --port 8000 --reload"
 # 安装后运行
 post_install = "playwright install --with-deps chromium"
 post_lock = "pre-commit install"
 
 [tool.aerich]
-tortoise_orm = "wechat.settings.TORTOISE_ORM"
+tortoise_orm = "bot.settings.TORTOISE_ORM"
 location = "./migrations"
 src_folder = "./."

@@ -1,6 +1,6 @@
 import structlog
 
-from wechat.models import Config as ConfigModel
+from bot.models import Config as ConfigModel
 
 
 log = structlog.get_logger()

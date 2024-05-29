@@ -5,9 +5,9 @@ import json
 import structlog
 from fastapi import APIRouter, Form, BackgroundTasks
 
-from wechat.schemas import Event
-from wechat.command import run_command
-from wechat.plugins import router as plugin_router
+from bot.schemas import Event
+from bot.command import run_command
+from bot.plugins import router as plugin_router
 
 
 router = APIRouter()

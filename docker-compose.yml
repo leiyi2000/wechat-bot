@@ -1,27 +1,27 @@
 version: '3.8'
 services:
-  wxBotWebhook:
+  wechat-webhook:
     image: dannicool/docker-wechatbot-webhook
     environment:
       - LOG_LEVEL=info
       - DISABLE_AUTO_LOGIN=false
       - LOGIN_API_TOKEN=${LOGIN_API_TOKEN:-123456}
-      - RECVD_MSG_API=${RECVD_MSG_API:-http://wechat-apiserver:8000/event}
+      - RECVD_MSG_API=${RECVD_MSG_API:-http://wechat-bot-apiserver:8000/event}
     restart: unless-stopped
 
-  wechat-apiserver:
+  wechat-bot-apiserver:
     build:
       context: .
       dockerfile: Dockerfile
-    image: wechat-apiserver:${IMAGE_TAG:-latest}
+    image: wechat-bot-apiserver:${IMAGE_TAG:-latest}
     volumes:
-      - sqlite3-volume:/app/db
+      - data:/app/data
     environment:
-      - DATABASE_URL=${DATABASE_URL:-sqlite://db/wechat.sqlite3}
+      - DATABASE_URL=${DATABASE_URL:-sqlite://data/bot.sqlite3}
       - WX_BOT_API=${WX_BOT_API:-http://wxBotWebhook:3001/webhook/msg/v2?token=123456}
     ports:
       - "3002:8000"
     restart: always
 
 volumes:
-  sqlite3-volume:
+  data:

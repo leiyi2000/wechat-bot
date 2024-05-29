@@ -2,7 +2,7 @@
 
 from fastapi import APIRouter
 
-from wechat.api import event, config, weather
+from bot.api import event, config, weather
 
 
 router = APIRouter()

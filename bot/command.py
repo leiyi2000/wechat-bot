@@ -5,9 +5,9 @@ from functools import partial
 
 import structlog
 
-from wechat import hook
-from wechat.config import config
-from wechat.schemas import Event
+from bot import hook
+from bot.config import config
+from bot.schemas import Event
 
 
 log = structlog.get_logger()

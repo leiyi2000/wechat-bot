@@ -1,5 +1,5 @@
-from wechat.command import CommandRouter
-from wechat.plugins import (
+from bot.command import CommandRouter
+from bot.plugins import (
     bilibili,
     setu,
     weather,
