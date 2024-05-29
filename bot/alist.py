@@ -21,10 +21,12 @@ async def upload(
         response = await client.put(api + "/api/fs/form", files=files, headers=headers)
         response.raise_for_status()
         response = await client.post(
-            api + "/api/fs/list", json=payload, headers=headers
+            api + "/api/fs/list",
+            json=payload,
+            headers=headers,
         )
         response.raise_for_status()
-    for file_info in response.json()["data"]:
+    for file_info in response.json()["data"]["content"]:
         if file_info["name"] == filename:
             return f"{api}/d/{target_path}?sign={file_info['sign']}"
     raise AssertionError(f"not found {filename}: {response.json()}")
