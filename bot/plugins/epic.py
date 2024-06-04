@@ -26,15 +26,17 @@ def parse_free_game_image(images: List[Dict[str, str]]) -> str:
     return ""
 
 
-def parse_free_game_date(promotions: Dict) -> Tuple[str, str]:
+def parse_free_game_date(promotions: Dict | None) -> Tuple[str, str]:
     """解析免费游戏领取的时间范围.
 
     Args:
-        promotions (Dict): 促销信息.
+        promotions (Dict | None): 促销信息.
 
     Returns:
         Tuple[str, str]: 开始时间, 结束时间.
     """
+    if not promotions:
+        return "", ""
     offers = promotions["promotionalOffers"]
     upcoming = promotions["upcomingPromotionalOffers"]
     if offers:
