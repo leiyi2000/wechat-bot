@@ -1,16 +1,14 @@
 from typing import List, Dict, Tuple
 
 import httpx
+import structlog
 
+from bot.schemas import Message
 from bot.command import CommandRouter
-from bot.schemas import (
-    Event,
-    Message,
-    MessageType,
-)
 
 
 router = CommandRouter()
+log = structlog.get_logger()
 
 
 def parse_free_game_image(images: List[Dict[str, str]]) -> str:
@@ -82,32 +80,30 @@ def pick_up_link(element: Dict) -> str:
 
 def free_game_message(elements: List[Dict]) -> Message:
     content = ""
-    images = []
     for element in elements:
-        title = element["title"]
-        # 未公布的神秘游戏跳过
-        if title.startswith("Mystery Game"):
+        try:
+            title = element["title"]
+            # 未公布的神秘游戏跳过
+            if title.startswith("Mystery Game"):
+                continue
+            description = element["description"]
+            discount_price = element["price"]["totalPrice"]["fmtPrice"]["discountPrice"]
+            start_date, end_date = parse_free_game_date(element["promotions"])
+            link = pick_up_link(element)
+        except Exception as e:
+            log.warning(f"free game  parse error: {e}")
             continue
-        description = element["description"]
-        discount_price = element["price"]["totalPrice"]["fmtPrice"]["discountPrice"]
-        start_date, end_date = parse_free_game_date(element["promotions"])
-        link = pick_up_link(element)
         # 拼接消息
         content += f"游戏:\t{title}\n"
         content += f"描述:\t{description}\n"
         content += f"价格:\t{discount_price}\n"
         content += f"时间:\t{start_date} ~ {end_date}\n"
         content += f"领取:\t{link}\n\n\n"
-        # 游戏图片
-        images.append(parse_free_game_image(element["keyImages"]))
-    return [
-        Message(type=MessageType.text, content=content.strip()),
-        # Message(type=MessageType.file, content=",".join(images)),
-    ]
+    return content.strip()
 
 
 @router.command("喜加一")
-async def free_game(e: Event):
+async def free_game():
     async with httpx.AsyncClient() as client:
         url = "https://store-site-backend-static.ak.epicgames.com/freeGamesPromotions"
         params = {
