@@ -102,7 +102,7 @@ def free_game_message(elements: List[Dict]) -> Message:
     return content.strip()
 
 
-@router.command("喜加一")
+@router.command("喜加一", event_arg=False)
 async def free_game():
     async with httpx.AsyncClient() as client:
         url = "https://store-site-backend-static.ak.epicgames.com/freeGamesPromotions"
