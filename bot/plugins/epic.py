@@ -90,15 +90,15 @@ def free_game_message(elements: List[Dict]) -> Message:
             discount_price = element["price"]["totalPrice"]["fmtPrice"]["discountPrice"]
             start_date, end_date = parse_free_game_date(element["promotions"])
             link = pick_up_link(element)
+            # 拼接消息
+            content += f"游戏:\t{title}\n"
+            content += f"描述:\t{description}\n"
+            content += f"价格:\t{discount_price}\n"
+            content += f"时间:\t{start_date} ~ {end_date}\n"
+            content += f"领取:\t{link}\n\n\n"
         except Exception as e:
             log.warning(f"free game parse error: {e}")
             continue
-        # 拼接消息
-        content += f"游戏:\t{title}\n"
-        content += f"描述:\t{description}\n"
-        content += f"价格:\t{discount_price}\n"
-        content += f"时间:\t{start_date} ~ {end_date}\n"
-        content += f"领取:\t{link}\n\n\n"
     return content.strip()
 
 
