@@ -91,7 +91,7 @@ def free_game_message(elements: List[Dict]) -> Message:
             start_date, end_date = parse_free_game_date(element["promotions"])
             link = pick_up_link(element)
         except Exception as e:
-            log.warning(f"free game  parse error: {e}")
+            log.warning(f"free game parse error: {e}")
             continue
         # 拼接消息
         content += f"游戏:\t{title}\n"
