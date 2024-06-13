@@ -67,6 +67,7 @@ class CommandRouter:
             event_arg (bool, optional): True 传递event参数到func.
             func_kwargs (Dict[str, Any], optional): func额外参数.
         """
+
         def decorator(func: Callable[..., Any]):
             # 初始化一个命令路由
             route = CommandRoute(
@@ -93,6 +94,7 @@ class CommandRouter:
     def include_router(self, router: "CommandRouter"):
         for route in router.routes:
             self.add_route(route)
+
 
 async def run_command(router: CommandRouter, event: Event):
     """路由命令执行.
