@@ -85,6 +85,11 @@ class CommandRouter:
     def matches(self, event: Event) -> List[CommandRoute]:
         return [route for route in self.routes if route.match(event)]
 
+    def match(self, event: Event) -> CommandRoute | None:
+        for route in self.routes:
+            if route.match(event):
+                return route
+
     def include_router(self, router: "CommandRouter"):
         for route in router.routes:
             self.add_route(route)
@@ -98,8 +103,8 @@ async def run_command(router: CommandRouter, event: Event):
         router (CommandRouter): 命令路由器.
         event (Event): 消息事件.
     """
-    routes = router.matches(event)
-    for route in routes:
+    route = router.match(event)
+    if route is not None:
         func = route.func
         if route.event_arg:
             func = partial(func, event)
