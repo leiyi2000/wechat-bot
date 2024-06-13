@@ -5,7 +5,6 @@ from bot.plugins import (
     weather,
     epic,
     kfc,
-    lol,
     news,
     leetcode,
 )
@@ -13,7 +12,6 @@ from bot.plugins import (
 
 # 指令注入
 router = CommandRouter()
-router.include_router(lol.router)
 router.include_router(kfc.router)
 router.include_router(setu.router)
 router.include_router(epic.router)
