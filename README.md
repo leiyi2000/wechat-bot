@@ -111,19 +111,6 @@
         "value": "高德的天气密钥"
       }'
 
-
-  **WEGAME**
-
-      curl -X 'POST' \
-      'http://127.0.0.1:3002/config' \
-      -H 'accept: application/json' \
-      -H 'Content-Type: application/json' \
-      -d '{
-        "key": "wegame",
-        "value": "你的WEGAME-cookie"
-      }'
-
-
   **ALIST-(配置此项可存储图片)**
 
       curl -X 'POST' \

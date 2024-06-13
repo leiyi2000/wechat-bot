@@ -88,22 +88,6 @@ class AList:
         self.path = value["path"]
 
 
-class Wegame:
-    def __init__(self) -> None:
-        self.cookie: str | Undefined = undefined
-        self.name = "wegame"
-
-    async def load_from_db(self) -> None:
-        config = await ConfigModel.get_or_none(key=self.name)
-        if config is not None:
-            self.load(config.value)
-        else:
-            log.warning(f"config {self.name} not set")
-
-    def load(self, value: str):
-        self.cookie = value
-
-
 class Weather:
     def __init__(self) -> None:
         self.amap_key: str | Undefined = undefined
@@ -143,7 +127,6 @@ class Config:
         self.news = News()
         self.setu = Setu()
         self.alist = AList()
-        self.wegame = Wegame()
         self.weather = Weather()
         self.error = Error()
         # 通过key匹配对应的配置管理
@@ -154,14 +137,12 @@ class Config:
         await self.news.load_from_db()
         await self.setu.load_from_db()
         await self.alist.load_from_db()
-        await self.wegame.load_from_db()
         await self.weather.load_from_db()
         await self.error.load_from_db()
         self._map[self.kfc.name] = self.kfc
         self._map[self.news.name] = self.news
         self._map[self.setu.name] = self.setu
         self._map[self.alist.name] = self.alist
-        self._map[self.wegame.name] = self.wegame
         self._map[self.weather.name] = self.weather
         self._map[self.error.name] = self.error
 
