@@ -35,7 +35,7 @@ async def sts():
         url = history_setu[-1]
         async with httpx.AsyncClient() as client:
             response = await client.get(url)
-        filename = f"setu/{url.split("/")[-1]}"
+        filename = f'setu/{url.split("/")[-1]}'
         file_url = await alist.upload(
             api=config.alist.api,
             api_key=config.alist.api_key,
