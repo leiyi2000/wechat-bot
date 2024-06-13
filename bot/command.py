@@ -88,6 +88,7 @@ class CommandRouter:
     def include_router(self, router: "CommandRouter"):
         for route in router.routes:
             self.add_route(route)
+        self.routes.sort(key=lambda route: len(route.prefix), reverse=True)
 
 
 async def run_command(router: CommandRouter, event: Event):

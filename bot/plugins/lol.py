@@ -1,3 +1,5 @@
+"""2024-06-13: 注意新版联盟用户名变更, 此插件无法使用"""
+
 import os
 import json
 import uuid

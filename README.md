@@ -24,6 +24,10 @@
     <td>st</td>
     <td><img src="https://raw.githubusercontent.com/leiyi2000/wechat-bot/main/docs/resources/image/st.webp" style="width:200px; height:100px;"></td>
   </tr>
+    <tr>
+    <td>sts</td>
+    <td>保存最近发的st到alist(如果开启了alist)</td>
+  </tr>
 </table>
 </details>
 
