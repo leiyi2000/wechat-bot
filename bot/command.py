@@ -1,5 +1,6 @@
 from typing import Callable, Any, List, Dict
 
+import re
 import asyncio
 from functools import partial
 
@@ -19,14 +20,14 @@ class CommandRoute:
     def __init__(
         self,
         name: str,
-        prefix: str,
+        pattern: re.Pattern,
         func: Callable[..., Any],
         event_arg: bool,
         limit_room: bool,
         func_kwargs: Dict[str, Any],
     ) -> None:
         self.name = name
-        self.prefix = prefix
+        self.pattern = pattern
         self.func = func
         self.event_arg = event_arg
         self.limit_room = limit_room
@@ -35,7 +36,7 @@ class CommandRoute:
     def match(self, event: Event) -> bool:
         if self.limit_room and not event.is_room:
             return False
-        return event.content.startswith(self.prefix)
+        return self.pattern.fullmatch(event.content) is not None
 
 
 class CommandRouter:
@@ -49,7 +50,7 @@ class CommandRouter:
 
     def command(
         self,
-        prefix: str,
+        pattern: str,
         *,
         name: str = None,
         limit_room: bool = False,
@@ -59,19 +60,18 @@ class CommandRouter:
         """command装饰器
 
         Args:
-            prefix (str): 指令前缀.
+            pattern (str): 指令正则匹配.
             func (Callable[..., Any]): 命令处理函数.
             name (str, optional): 名称.
             limit_room (bool, optional): True 限制只能处理群消息.
             event_arg (bool, optional): True 传递event参数到func.
             func_kwargs (Dict[str, Any], optional): func额外参数.
         """
-
         def decorator(func: Callable[..., Any]):
             # 初始化一个命令路由
             route = CommandRoute(
                 name or getattr(func, "__name__", "unknown"),
-                prefix,
+                re.compile(pattern),
                 func,
                 event_arg,
                 limit_room,
@@ -93,8 +93,6 @@ class CommandRouter:
     def include_router(self, router: "CommandRouter"):
         for route in router.routes:
             self.add_route(route)
-        self.routes.sort(key=lambda route: len(route.prefix), reverse=True)
-
 
 async def run_command(router: CommandRouter, event: Event):
     """路由命令执行.

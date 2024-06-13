@@ -38,7 +38,7 @@ async def get_adcode(api_key: str, address: str) -> str:
         return response.json()["geocodes"][0]["adcode"]
 
 
-@router.command("天气")
+@router.command("天气.*+")
 async def real_time_weather(event: Event):
     address = event.content.removeprefix("天气").strip()
     api_key = config.weather.amap_key
@@ -65,7 +65,7 @@ async def real_time_weather(event: Event):
     return FileMessage(filename=f"weather/{uuid.uuid1()}.png", content=image)
 
 
-@router.command("下雨提醒")
+@router.command("下雨提醒.*+")
 async def rain_remind(event: Event):
     args = event.content.removeprefix("下雨提醒").strip().split("#")
     if len(args) == 1:
@@ -101,7 +101,7 @@ async def rain_remind(event: Event):
     return message
 
 
-@router.command("取消下雨提醒")
+@router.command("取消下雨提醒.*+")
 async def cancel_rain_remind(event: Event):
     address = event.content.removeprefix("取消下雨提醒").strip()
     if not address:
@@ -111,7 +111,9 @@ async def cancel_rain_remind(event: Event):
         api_key = config.weather.amap_key
         adcode = await get_adcode(api_key, address)
         weather = await models.Weather.get_or_none(
-            to=event.to, is_room=event.is_room, adcode=adcode
+            to=event.to,
+            is_room=event.is_room,
+            adcode=adcode,
         )
         if weather:
             await weather.delete()
@@ -137,7 +139,6 @@ async def rain_remind_job():
         forecasts = response.json()["forecasts"]
         tomorrow_weather = forecasts[0]["casts"][1]
         if "雨" in (desc := tomorrow_weather["dayweather"]):
-            # 准备发送消息
             reply_message = f"亲~, {weather.address}有{desc}"
             func = partial(hook.reply, weather.to, weather.is_room, reply_message)
             send_datetime = datetime(

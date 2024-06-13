@@ -30,5 +30,5 @@ async def upload(
         response.raise_for_status()
     for file_info in response.json()["data"]["content"]:
         if file_info["name"] == name:
-            return f"{api}/d/{target_path}?sign={file_info['sign']}"
+            return f"{api}/d{target_path}?sign={file_info['sign']}"
     raise AssertionError(f"not found {filename}: {response.json()}")
