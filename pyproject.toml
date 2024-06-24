@@ -66,7 +66,7 @@ exclude = [
 line-length = 88
 indent-width = 4
 
-target-version = "py312"
+target-version = "py311"
 
 [tool.ruff.lint]
 # Enable Pyflakes (`F`) and a subset of the pycodestyle (`E`)  codes by default.
@@ -114,8 +114,7 @@ docstring-code-line-length = "dynamic"
 dev.env_file.override = ".env"
 dev.cmd = "uvicorn bot.main:app --host 0.0.0.0 --port 8000 --reload"
 # 安装后运行
-post_install = "playwright install --with-deps chromium"
-post_lock = "pre-commit install"
+post_install = "bash post_install.sh"
 
 [tool.aerich]
 tortoise_orm = "bot.settings.TORTOISE_ORM"
